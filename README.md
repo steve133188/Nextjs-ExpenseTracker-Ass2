@@ -1,6 +1,6 @@
 # Ledger — Personal Expense Tracker
 
-A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise their spending patterns with interactive charts, and filter by date range or category. Administrators can manage user accounts and review a complete audit log of all activity.
+A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise their spending patterns with interactive charts, and filter by date range or category. Administrators can create, delete, and manage all user accounts (including role assignment) and review a complete audit log of all activity.
 
 ## Technical Design Decisions
 
@@ -77,7 +77,7 @@ Demo accounts (after seeding):
 │   │   ├── api/
 │   │   │   ├── auth/        # register, login, logout, me endpoints
 │   │   │   ├── expenses/    # CRUD endpoints for expense items
-│   │   │   └── admin/       # Admin-only user management and activity log endpoints
+│   │   │   └── admin/       # Admin-only endpoints: user CRUD (create/list/role/delete) and activity log
 │   │   ├── login/           # /login page (authentication)
 │   │   ├── globals.css      # Global styles and Tailwind theme
 │   │   ├── layout.tsx       # Root layout (fonts, providers)
@@ -100,7 +100,7 @@ Demo accounts (after seeding):
 │   │   └── utils.ts         # Shared utility functions
 │   └── providers/
 │       └── query-provider.tsx  # TanStack Query client provider
-├── middleware.ts             # JWT verification and route protection
+├── src/middleware.ts         # JWT verification and route protection
 ├── .env.local               # Environment variables (not committed)
 └── WORKLOAD.md              # Workload allocation statement
 ```
@@ -111,4 +111,4 @@ Demo accounts (after seeding):
 |--------|-------------|
 | `users` | Registered accounts with hashed passwords and roles (`user`/`admin`) |
 | `expenses` | Individual expense records belonging to a user |
-| `user_activities` | Audit log of login, logout, register, and expense CRUD events |
+| `user_activities` | Audit log of login, logout, register, expense CRUD, and admin user creation events |
