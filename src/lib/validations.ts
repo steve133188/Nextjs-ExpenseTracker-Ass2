@@ -40,5 +40,13 @@ export const registerSchema = z.object({
   password: z.string().min(8, "Min 8 characters"),
 })
 
-export type LoginFormData    = z.infer<typeof loginSchema>
-export type RegisterFormData = z.infer<typeof registerSchema>
+export const adminCreateUserSchema = z.object({
+  username: z.string().trim().min(3, "Min 3 characters").max(30),
+  email:    z.string().email("Invalid email"),
+  password: z.string().min(8, "Min 8 characters"),
+  role:     z.enum(["user", "admin"]),
+})
+
+export type LoginFormData          = z.infer<typeof loginSchema>
+export type RegisterFormData       = z.infer<typeof registerSchema>
+export type AdminCreateUserFormData = z.infer<typeof adminCreateUserSchema>

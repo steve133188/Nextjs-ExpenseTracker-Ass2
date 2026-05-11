@@ -1,13 +1,26 @@
 "use client"
 
+import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
-import { Trash2 } from "lucide-react"
+import { Trash2, UserPlus } from "lucide-react"
 import { toast } from "sonner"
+import { adminCreateUserSchema, type AdminCreateUserFormData } from "@/lib/validations"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+  DialogTrigger, DialogFooter, DialogClose,
+} from "@/components/ui/dialog"
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
@@ -33,6 +46,101 @@ function useAdminUsers() {
     queryKey: ["admin", "users"],
     queryFn:  () => fetch("/api/admin/users").then((r) => r.json()),
   })
+}
+
+function useCreateUser() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: AdminCreateUserFormData) =>
+      fetch("/api/admin/users", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(data),
+      }).then(async (r) => {
+        const json = await r.json()
+        if (!r.ok) throw new Error(json.error ?? "Failed to create user")
+        return json
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
+      queryClient.invalidateQueries({ queryKey: ["admin", "activities"] })
+      toast.success("User created")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+function CreateUserDialog() {
+  const [open, setOpen] = useState(false)
+  const createUser = useCreateUser()
+
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors, isValid } } =
+    useForm<AdminCreateUserFormData>({
+      resolver: zodResolver(adminCreateUserSchema),
+      mode: "onChange",
+      defaultValues: { username: "", email: "", password: "", role: "user" },
+    })
+
+  const role = watch("role")
+
+  function onSubmit(data: AdminCreateUserFormData) {
+    createUser.mutate(data, {
+      onSuccess: () => { setOpen(false); reset() },
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(val) => { if (!createUser.isPending) { setOpen(val); if (!val) reset() } }}>
+      <DialogTrigger asChild>
+        <Button size="sm" className="h-7 text-xs gap-1">
+          <UserPlus className="size-3.5" />
+          Create User
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-sm" aria-describedby={undefined}>
+        <DialogHeader>
+          <DialogTitle>Create User</DialogTitle>
+        </DialogHeader>
+        <form id="create-user-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="cu-username">Username</Label>
+            <Input id="cu-username" placeholder="e.g. john" disabled={createUser.isPending} {...register("username")} />
+            {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="cu-email">Email</Label>
+            <Input id="cu-email" type="email" placeholder="e.g. john@example.com" disabled={createUser.isPending} {...register("email")} />
+            {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="cu-password">Password</Label>
+            <Input id="cu-password" type="password" placeholder="Min 8 characters" disabled={createUser.isPending} {...register("password")} />
+            {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label>Role</Label>
+            <Select value={role} onValueChange={(v) => setValue("role", v as "user" | "admin", { shouldValidate: true })} disabled={createUser.isPending}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">user</SelectItem>
+                <SelectItem value="admin">admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </form>
+        <DialogFooter className="gap-2">
+          <DialogClose asChild>
+            <Button variant="outline" disabled={createUser.isPending}>Cancel</Button>
+          </DialogClose>
+          <Button type="submit" form="create-user-form" disabled={createUser.isPending || !isValid}>
+            {createUser.isPending ? "Creating..." : "Create User"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 function useAdminActivities() {
@@ -77,7 +185,10 @@ export function AdminPanel({ currentUserId }: { currentUserId: string }) {
       {/* User Management */}
       <Card>
         <CardHeader className="py-3 px-4">
-          <CardTitle className="text-base">User Management</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base">User Management</CardTitle>
+            <CreateUserDialog />
+          </div>
         </CardHeader>
         <CardContent className="pt-0 px-0">
           <Table>
