@@ -2,7 +2,10 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import type { ChangePasswordFormData } from "@/lib/validations"
+import type { changePasswordSchema } from "@/lib/validations"
+import type { z } from "zod"
+
+type ChangePasswordPayload = Pick<z.infer<typeof changePasswordSchema>, "currentPassword" | "newPassword">
 
 export interface AuthUser {
   id:       string
@@ -44,7 +47,7 @@ export function useAuth() {
 
 export function useChangePassword() {
   return useMutation({
-    mutationFn: (data: ChangePasswordFormData) =>
+    mutationFn: (data: ChangePasswordPayload) =>
       fetch("/api/auth/me", {
         method:  "PATCH",
         headers: { "Content-Type": "application/json" },

@@ -25,12 +25,12 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
     useForm<ChangePasswordFormData>({
       resolver: zodResolver(changePasswordSchema),
       mode: "onChange",
-      defaultValues: { currentPassword: "", newPassword: "" },
+      defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
     })
 
   useEffect(() => { if (!open) reset() }, [open, reset])
 
-  function onSubmit(data: ChangePasswordFormData) {
+  function onSubmit({ confirmPassword: _, ...data }: ChangePasswordFormData) {
     changePassword.mutate(data, {
       onSuccess: () => onOpenChange(false),
     })
@@ -52,6 +52,11 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
             <Label htmlFor="cp-new">New Password</Label>
             <Input id="cp-new" type="password" placeholder="Min 8 characters" disabled={changePassword.isPending} {...register("newPassword")} />
             {errors.newPassword && <p className="text-destructive text-sm">{errors.newPassword.message}</p>}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="cp-confirm">Confirm New Password</Label>
+            <Input id="cp-confirm" type="password" placeholder="Re-enter new password" disabled={changePassword.isPending} {...register("confirmPassword")} />
+            {errors.confirmPassword && <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>}
           </div>
         </form>
         <DialogFooter className="gap-2">
