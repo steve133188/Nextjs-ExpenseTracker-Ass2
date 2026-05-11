@@ -1,61 +1,81 @@
 "use client"
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { KeyRound } from "lucide-react"
-import { adminResetPasswordSchema, type AdminResetPasswordFormData } from "@/lib/validations"
+import { KeyRound, Copy, Check } from "lucide-react"
 import { useResetUserPassword } from "@/hooks/use-admin"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
-  DialogTrigger, DialogFooter, DialogClose,
+  DialogTrigger, DialogFooter, DialogClose, DialogDescription,
 } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 export function ResetPasswordDialog({ userId, username }: { userId: string; username: string }) {
-  const [open, setOpen]  = useState(false)
-  const resetPassword    = useResetUserPassword()
+  const [open, setOpen]       = useState(false)
+  const [generated, setGenerated] = useState<string | null>(null)
+  const [copied, setCopied]   = useState(false)
+  const resetPassword         = useResetUserPassword()
 
-  const { register, handleSubmit, reset, formState: { errors, isValid } } =
-    useForm<AdminResetPasswordFormData>({
-      resolver: zodResolver(adminResetPasswordSchema),
-      mode: "onChange",
-      defaultValues: { newPassword: "" },
-    })
-
-  function onSubmit(data: AdminResetPasswordFormData) {
-    resetPassword.mutate({ id: userId, ...data }, {
-      onSuccess: () => { setOpen(false); reset() },
+  function handleReset() {
+    resetPassword.mutate(userId, {
+      onSuccess: (data) => setGenerated(data.password),
     })
   }
 
+  function handleCopy() {
+    if (!generated) return
+    navigator.clipboard.writeText(generated)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  function handleOpenChange(val: boolean) {
+    if (resetPassword.isPending) return
+    setOpen(val)
+    if (!val) { setGenerated(null); setCopied(false) }
+  }
+
   return (
-    <Dialog open={open} onOpenChange={(val) => { if (!resetPassword.isPending) { setOpen(val); if (!val) reset() } }}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-7 w-7" aria-label={`Reset password for ${username}`}>
           <KeyRound className="size-3.5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm" aria-describedby={undefined}>
+      <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Reset Password — {username}</DialogTitle>
+          <DialogDescription>
+            {generated
+              ? "Share this temporary password with the user. It cannot be retrieved again."
+              : "A new random password will be generated for this user."}
+          </DialogDescription>
         </DialogHeader>
-        <form id="reset-password-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="rp-new">New Password</Label>
-            <Input id="rp-new" type="password" placeholder="Min 8 characters" disabled={resetPassword.isPending} {...register("newPassword")} />
-            {errors.newPassword && <p className="text-destructive text-sm">{errors.newPassword.message}</p>}
+
+        {generated ? (
+          <div className="flex gap-2">
+            <Input value={generated} readOnly className="font-mono text-sm" />
+            <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy password">
+              {copied ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
+            </Button>
           </div>
-        </form>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            The user's current password will be replaced immediately.
+          </p>
+        )}
+
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="outline" disabled={resetPassword.isPending}>Cancel</Button>
+            <Button variant="outline" disabled={resetPassword.isPending}>
+              {generated ? "Close" : "Cancel"}
+            </Button>
           </DialogClose>
-          <Button type="submit" form="reset-password-form" disabled={resetPassword.isPending || !isValid}>
-            {resetPassword.isPending ? "Resetting..." : "Reset Password"}
-          </Button>
+          {!generated && (
+            <Button onClick={handleReset} disabled={resetPassword.isPending}>
+              {resetPassword.isPending ? "Generating..." : "Generate Password"}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

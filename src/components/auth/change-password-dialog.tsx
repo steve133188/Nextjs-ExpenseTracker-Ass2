@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { KeyRound } from "lucide-react"
 import { changePasswordSchema, type ChangePasswordFormData } from "@/lib/validations"
 import { useChangePassword } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
@@ -11,12 +10,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
-  DialogTrigger, DialogFooter, DialogClose,
+  DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
 
-export function ChangePasswordDialog() {
-  const [open, setOpen] = useState(false)
-  const changePassword  = useChangePassword()
+interface Props {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function ChangePasswordDialog({ open, onOpenChange }: Props) {
+  const changePassword = useChangePassword()
 
   const { register, handleSubmit, reset, formState: { errors, isValid } } =
     useForm<ChangePasswordFormData>({
@@ -25,19 +28,16 @@ export function ChangePasswordDialog() {
       defaultValues: { currentPassword: "", newPassword: "" },
     })
 
+  useEffect(() => { if (!open) reset() }, [open, reset])
+
   function onSubmit(data: ChangePasswordFormData) {
     changePassword.mutate(data, {
-      onSuccess: () => { setOpen(false); reset() },
+      onSuccess: () => onOpenChange(false),
     })
   }
 
   return (
-    <Dialog open={open} onOpenChange={(val) => { if (!changePassword.isPending) { setOpen(val); if (!val) reset() } }}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Change password">
-          <KeyRound className="size-4" />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={(val) => { if (!changePassword.isPending) onOpenChange(val) }}>
       <DialogContent className="sm:max-w-sm" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Change Password</DialogTitle>

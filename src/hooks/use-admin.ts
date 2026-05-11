@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { adminCreateUserSchema, type AdminCreateUserFormData, type AdminResetPasswordFormData } from "@/lib/validations"
+import { adminCreateUserSchema, type AdminCreateUserFormData } from "@/lib/validations"
 
 export interface AdminUser {
   id:        string
@@ -88,19 +88,15 @@ export function useDeleteUser() {
 export function useResetUserPassword() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, ...data }: { id: string } & AdminResetPasswordFormData) =>
-      fetch(`/api/admin/users/${id}/reset-password`, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(data),
-      }).then(async (r) => {
-        const json = await r.json()
-        if (!r.ok) throw new Error(json.error ?? "Failed to reset password")
-        return json
-      }),
+    mutationFn: (id: string) =>
+      fetch(`/api/admin/users/${id}/reset-password`, { method: "POST" })
+        .then(async (r) => {
+          const json = await r.json()
+          if (!r.ok) throw new Error(json.error ?? "Failed to reset password")
+          return json as { password: string }
+        }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "activities"] })
-      toast.success("Password reset")
     },
     onError: (err: Error) => toast.error(err.message),
   })

@@ -1,8 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { useTheme } from "next-themes"
-import { Plus, RefreshCw, Sun, Moon, Search, LogOut } from "lucide-react"
+import { Plus, RefreshCw, Search } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useExpenses } from "@/hooks/use-expenses"
 import { useExpenseFilter } from "@/hooks/use-expense-filter"
@@ -15,7 +14,7 @@ import { ExpenseDialog } from "@/components/expenses/expense-dialog"
 import { ExpenseListSkeleton } from "@/components/expenses/table/expense-list-skeleton"
 import { DonutChartSkeleton, BarChartSkeleton } from "@/components/expenses/charts/chart-skeleton"
 import { AdminPanel } from "@/components/admin/admin-panel"
-import { ChangePasswordDialog } from "@/components/auth/change-password-dialog"
+import { UserMenu } from "@/components/auth/user-menu"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -58,8 +57,7 @@ function ChartCard({
 }
 
 export default function Home() {
-  const { theme, setTheme } = useTheme()
-  const { user, isLoading: authLoading, logout } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
   const [tab, setTab]               = useState<Tab>("expenses")
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -145,20 +143,7 @@ export default function Home() {
                 }
               />
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Toggle dark mode"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              <Sun className="size-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute size-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
-            </Button>
-            <span className="hidden sm:block text-sm text-muted-foreground">{user.username}</span>
-            <ChangePasswordDialog />
-            <Button variant="ghost" size="icon" aria-label="Logout" onClick={logout}>
-              <LogOut className="size-4" />
-            </Button>
+            <UserMenu />
           </div>
         </div>
       </header>
