@@ -105,13 +105,13 @@ export default function Home() {
           </span>
 
           {/* Tab switcher */}
-          <div className="flex rounded-lg border p-0.5 gap-0.5 ml-4">
+          <div className="flex items-center ml-4 bg-muted rounded-lg p-1 gap-0.5">
             <button
               onClick={() => setTab("expenses")}
               className={cn(
-                "px-3 py-1 text-sm rounded-md transition-colors",
+                "px-3 py-1 text-sm rounded-md transition-all",
                 tab === "expenses"
-                  ? "bg-primary text-primary-foreground font-medium"
+                  ? "bg-background shadow-sm text-foreground font-medium"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -121,9 +121,9 @@ export default function Home() {
               <button
                 onClick={() => setTab("admin")}
                 className={cn(
-                  "px-3 py-1 text-sm rounded-md transition-colors",
+                  "px-3 py-1 text-sm rounded-md transition-all",
                   tab === "admin"
-                    ? "bg-primary text-primary-foreground font-medium"
+                    ? "bg-background shadow-sm text-foreground font-medium"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
