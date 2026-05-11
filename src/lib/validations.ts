@@ -31,7 +31,7 @@ export type ExpenseFormData = z.infer<typeof expenseSchema>
 
 export const loginSchema = z.object({
   email:    z.string().email("Invalid email"),
-  password: z.string().min(1, "Password required"),
+  password: z.string().min(8, "Min 8 characters"),
 })
 
 export const registerSchema = z.object({
