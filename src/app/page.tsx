@@ -66,20 +66,20 @@ export default function Home() {
   const { filter }    = expenseFilter
 
   const query         = useExpenses({ categories: filter.categories, from: filter.from, to: filter.to })
-  const allExpenses   = query.data ?? []
   const isLoading     = query.isLoading
   const isRefetching  = query.isFetching && !query.isLoading
 
   // Client-side live search over already-fetched expenses
   const expenses = useMemo(() => {
+    const all = query.data ?? []
     const q = searchQuery.trim().toLowerCase()
-    if (!q) return allExpenses
-    return allExpenses.filter(
+    if (!q) return all
+    return all.filter(
       (e) =>
         e.title.toLowerCase().includes(q) ||
         (e.description ?? "").toLowerCase().includes(q)
     )
-  }, [allExpenses, searchQuery])
+  }, [query.data, searchQuery])
 
   // Show full-screen spinner while checking auth session
   if (authLoading) {
