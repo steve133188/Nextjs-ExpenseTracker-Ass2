@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# SQLite database (binary — use npm run db:export for a readable export)
+/data/expenses.db
+
+# Keep the JSON export committed for submission
+!/data/expenses-export.json
+
+.env.local
+docs/superpowers/
