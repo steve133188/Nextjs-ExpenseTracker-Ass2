@@ -9,6 +9,8 @@ export type ActivityAction =
   | "update_expense"
   | "delete_expense"
   | "create_user"
+  | "change_password"
+  | "reset_password"
 
 export function logActivity(userId: string, action: ActivityAction, detail = ""): void {
   db.insert(userActivities).values({

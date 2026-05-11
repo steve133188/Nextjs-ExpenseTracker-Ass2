@@ -4,6 +4,7 @@ import { format } from "date-fns"
 import { Trash2 } from "lucide-react"
 import { useAdminUsers, useChangeRole, useDeleteUser } from "@/hooks/use-admin"
 import { CreateUserDialog } from "@/components/admin/create-user-dialog"
+import { ResetPasswordDialog } from "@/components/admin/reset-password-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -28,11 +29,11 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
       <CardContent className="pt-0 px-0">
         <Table>
           <colgroup>
-            <col className="w-[15%]" />
-            <col className="w-[35%]" />
-            <col className="w-[10%]" />
-            <col className="w-[15%]" />
-            <col className="w-[25%]" />
+            <col className="w-[13%]" />
+            <col className="w-[28%]" />
+            <col className="w-[9%]" />
+            <col className="w-[13%]" />
+            <col className="w-[37%]" />
           </colgroup>
           <TableHeader>
             <TableRow>
@@ -88,6 +89,7 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
                         >
                           {user.role === "admin" ? "→ user" : "→ admin"}
                         </Button>
+                        <ResetPasswordDialog userId={user.id} username={user.username} />
                         <Button
                           variant="ghost"
                           size="icon"

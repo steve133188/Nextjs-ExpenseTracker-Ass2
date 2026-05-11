@@ -15,6 +15,7 @@ import { ExpenseDialog } from "@/components/expenses/expense-dialog"
 import { ExpenseListSkeleton } from "@/components/expenses/table/expense-list-skeleton"
 import { DonutChartSkeleton, BarChartSkeleton } from "@/components/expenses/charts/chart-skeleton"
 import { AdminPanel } from "@/components/admin/admin-panel"
+import { ChangePasswordDialog } from "@/components/auth/change-password-dialog"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -154,6 +155,7 @@ export default function Home() {
               <Moon className="absolute size-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
             </Button>
             <span className="hidden sm:block text-sm text-muted-foreground">{user.username}</span>
+            <ChangePasswordDialog />
             <Button variant="ghost" size="icon" aria-label="Logout" onClick={logout}>
               <LogOut className="size-4" />
             </Button>

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
+import type { ChangePasswordFormData } from "@/lib/validations"
 
 export interface AuthUser {
   id:       string
@@ -39,4 +40,21 @@ export function useAuth() {
     isLoading: query.isLoading,
     logout:    () => logoutMutation.mutate(),
   }
+}
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data: ChangePasswordFormData) =>
+      fetch("/api/auth/me", {
+        method:  "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(data),
+      }).then(async (r) => {
+        const json = await r.json()
+        if (!r.ok) throw new Error(json.error ?? "Failed to change password")
+        return json
+      }),
+    onSuccess: () => toast.success("Password changed"),
+    onError:   (err: Error) => toast.error(err.message),
+  })
 }

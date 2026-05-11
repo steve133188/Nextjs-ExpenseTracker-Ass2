@@ -47,6 +47,17 @@ export const adminCreateUserSchema = z.object({
   role:     z.enum(["user", "admin"]),
 })
 
-export type LoginFormData          = z.infer<typeof loginSchema>
-export type RegisterFormData       = z.infer<typeof registerSchema>
-export type AdminCreateUserFormData = z.infer<typeof adminCreateUserSchema>
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Required"),
+  newPassword:     z.string().min(8, "Min 8 characters"),
+})
+
+export const adminResetPasswordSchema = z.object({
+  newPassword: z.string().min(8, "Min 8 characters"),
+})
+
+export type LoginFormData             = z.infer<typeof loginSchema>
+export type RegisterFormData          = z.infer<typeof registerSchema>
+export type AdminCreateUserFormData   = z.infer<typeof adminCreateUserSchema>
+export type ChangePasswordFormData    = z.infer<typeof changePasswordSchema>
+export type AdminResetPasswordFormData = z.infer<typeof adminResetPasswordSchema>
