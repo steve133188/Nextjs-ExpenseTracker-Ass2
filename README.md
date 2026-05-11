@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ledger — Personal Expense Tracker
 
-## Getting Started
+A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise their spending patterns with interactive charts, and filter by date range or category. Administrators can manage user accounts and review a complete audit log of all activity.
 
-First, run the development server:
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Database | SQLite via Drizzle ORM |
+| Auth | JWT (jose) stored in HttpOnly cookie, bcryptjs for password hashing |
+| UI | shadcn/ui, Tailwind CSS v4 |
+| Data fetching | TanStack Query v5 |
+| Forms | react-hook-form + zod |
+| Charts | Recharts |
+
+## How to Run
+
+**Prerequisites:** Node.js 18+
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Create environment file
+cp .env.example .env.local
+# Edit .env.local and set JWT_SECRET to any 32+ character random string
+
+# 3. Push schema to SQLite and start the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 4. (Optional) Seed the database with demo data and users
+npm run db:seed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Demo accounts (after seeding):
+- `admin@ledger.local` / `admin1234` — admin role
+- `demo@ledger.local` / `demo1234` — regular user
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Other scripts
 
-## Learn More
+| Command | Purpose |
+|---------|---------|
+| `npm run db:push` | Apply schema changes to SQLite |
+| `npm run db:seed` | Populate DB with demo users and expenses |
+| `npm run db:export` | Export DB contents to `data/expenses-export.json` |
+| `npm run build` | Production build |
 
-To learn more about Next.js, take a look at the following resources:
+## Folder Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+├── data/                    # SQLite database file and JSON export (git-ignored)
+├── docs/                    # Project documentation
+├── public/                  # Static assets
+├── scripts/
+│   ├── seed-db.js           # Populates DB with demo users and sample expenses
+│   └── export-db.js         # Exports DB contents to JSON for submission
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── auth/        # register, login, logout, me endpoints
+│   │   │   ├── expenses/    # CRUD endpoints for expense items
+│   │   │   └── admin/       # Admin-only user management and activity log endpoints
+│   │   ├── login/           # /login page (authentication)
+│   │   ├── globals.css      # Global styles and Tailwind theme
+│   │   ├── layout.tsx       # Root layout (fonts, providers)
+│   │   └── page.tsx         # Main dashboard (expenses + admin panel)
+│   ├── components/
+│   │   ├── admin/           # Admin panel (user table, activity log)
+│   │   ├── expenses/        # Expense table, form, dialog, filters, charts
+│   │   └── ui/              # shadcn/ui primitives
+│   ├── hooks/
+│   │   ├── use-auth.ts      # Authentication state (current user, logout)
+│   │   ├── use-expenses.ts  # Expense CRUD mutations and queries
+│   │   ├── use-expense-filter.ts  # Filter state (date range, categories)
+│   │   └── use-expense-table.ts   # Table state (sorting, pagination)
+│   ├── lib/
+│   │   ├── auth.ts          # JWT sign/verify helpers, cookie header builders
+│   │   ├── activity.ts      # logActivity() helper for user_activities table
+│   │   ├── db.ts            # Drizzle ORM database connection
+│   │   ├── schema.ts        # Database table definitions (users, expenses, user_activities)
+│   │   ├── validations.ts   # Zod schemas for all forms and API inputs
+│   │   └── utils.ts         # Shared utility functions
+│   └── providers/
+│       └── query-provider.tsx  # TanStack Query client provider
+├── middleware.ts             # JWT verification and route protection
+├── .env.local               # Environment variables (not committed)
+└── WORKLOAD.md              # Workload allocation statement
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Database Entities
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Entity | Description |
+|--------|-------------|
+| `users` | Registered accounts with hashed passwords and roles (`user`/`admin`) |
+| `expenses` | Individual expense records belonging to a user |
+| `user_activities` | Audit log of login, logout, register, and expense CRUD events |
