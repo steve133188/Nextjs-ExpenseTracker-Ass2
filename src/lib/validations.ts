@@ -56,12 +56,7 @@ export const changePasswordSchema = z.object({
   path:    ["confirmPassword"],
 })
 
-export const adminResetPasswordSchema = z.object({
-  newPassword: z.string().min(8, "Min 8 characters"),
-})
-
-export type LoginFormData             = z.infer<typeof loginSchema>
-export type RegisterFormData          = z.infer<typeof registerSchema>
-export type AdminCreateUserFormData   = z.infer<typeof adminCreateUserSchema>
-export type ChangePasswordFormData    = z.infer<typeof changePasswordSchema>
-export type AdminResetPasswordFormData = z.infer<typeof adminResetPasswordSchema>
+export type LoginFormData            = z.infer<typeof loginSchema>
+export type RegisterFormData         = z.infer<typeof registerSchema>
+export type AdminCreateUserFormData  = z.infer<typeof adminCreateUserSchema>
+export type ChangePasswordFormData   = z.infer<typeof changePasswordSchema>
