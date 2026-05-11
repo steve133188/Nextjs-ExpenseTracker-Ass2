@@ -1,65 +1,251 @@
-import Image from "next/image";
+"use client"
+
+import { useMemo, useState } from "react"
+import { useTheme } from "next-themes"
+import { Plus, RefreshCw, Sun, Moon, Search, LogOut } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
+import { useExpenses } from "@/hooks/use-expenses"
+import { useExpenseFilter } from "@/hooks/use-expense-filter"
+import { ExpenseFilters } from "@/components/expenses/filters/expense-filters"
+import { SummaryCard } from "@/components/expenses/summary-card"
+import { ExpenseChart } from "@/components/expenses/charts/expense-chart"
+import { MonthlyTrendsChart } from "@/components/expenses/charts/monthly-trends-chart"
+import { ExpenseTable } from "@/components/expenses/table/expense-table"
+import { ExpenseDialog } from "@/components/expenses/expense-dialog"
+import { ExpenseListSkeleton } from "@/components/expenses/table/expense-list-skeleton"
+import { DonutChartSkeleton, BarChartSkeleton } from "@/components/expenses/charts/chart-skeleton"
+import { AdminPanel } from "@/components/admin/admin-panel"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Spinner } from "@/components/ui/spinner"
+
+type Tab = "expenses" | "admin"
+
+function ChartCard({
+  title, skeleton, isLoading, isRefetching, children,
+}: {
+  title: string
+  skeleton: React.ReactNode
+  isLoading: boolean
+  isRefetching: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          {isLoading ? <Skeleton className="h-4 w-32" /> : (
+            <>
+              {title}
+              {isRefetching && <Spinner className="size-3 text-muted-foreground" />}
+            </>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? skeleton : (
+          <div className={cn("transition-opacity duration-200", isRefetching && "opacity-50")}>
+            {children}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function Home() {
+  const { theme, setTheme } = useTheme()
+  const { user, isLoading: authLoading, logout } = useAuth()
+  const [tab, setTab]               = useState<Tab>("expenses")
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const expenseFilter = useExpenseFilter()
+  const { filter }    = expenseFilter
+
+  const query         = useExpenses({ categories: filter.categories, from: filter.from, to: filter.to })
+  const allExpenses   = query.data ?? []
+  const isLoading     = query.isLoading
+  const isRefetching  = query.isFetching && !query.isLoading
+
+  // Client-side live search over already-fetched expenses
+  const expenses = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return allExpenses
+    return allExpenses.filter(
+      (e) =>
+        e.title.toLowerCase().includes(q) ||
+        (e.description ?? "").toLowerCase().includes(q)
+    )
+  }, [allExpenses, searchQuery])
+
+  // Show full-screen spinner while checking auth session
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner className="size-6 text-muted-foreground" />
+      </div>
+    )
+  }
+
+  // Middleware handles redirect, but guard against null during hydration
+  if (!user) return null
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-3 flex items-center gap-3 max-w-5xl">
+          <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: "var(--font-playfair)" }}>
+            Ledger
+          </span>
+          <span className="hidden sm:block text-xs text-muted-foreground font-mono tracking-widest uppercase pt-0.5">
+            Expense Tracker
+          </span>
+
+          {/* Tab switcher */}
+          <div className="flex rounded-lg border p-0.5 gap-0.5 ml-4">
+            <button
+              onClick={() => setTab("expenses")}
+              className={cn(
+                "px-3 py-1 text-sm rounded-md transition-colors",
+                tab === "expenses"
+                  ? "bg-primary text-primary-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              My Expenses
+            </button>
+            {user.role === "admin" && (
+              <button
+                onClick={() => setTab("admin")}
+                className={cn(
+                  "px-3 py-1 text-sm rounded-md transition-colors",
+                  tab === "admin"
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Admin
+              </button>
+            )}
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            {tab === "expenses" && (
+              <ExpenseDialog
+                mode="add"
+                trigger={
+                  <Button size="sm">
+                    <Plus className="size-4" />
+                    Add Expense
+                  </Button>
+                }
+              />
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Toggle dark mode"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <Sun className="size-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute size-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+            </Button>
+            <span className="hidden sm:block text-sm text-muted-foreground">{user.username}</span>
+            <Button variant="ghost" size="icon" aria-label="Logout" onClick={logout}>
+              <LogOut className="size-4" />
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </header>
+
+      {tab === "admin" && user.role === "admin" ? (
+        <main className="container mx-auto px-4 py-6 max-w-5xl">
+          <AdminPanel currentUserId={user.id} />
+        </main>
+      ) : (
+        <main className="container mx-auto px-4 py-6 max-w-5xl space-y-4">
+          {/* Live search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+            <Input
+              className="pl-9"
+              placeholder="Search expenses by title or description…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          </div>
+
+          <div className="rounded-lg border bg-card px-4 py-2.5">
+            <ExpenseFilters {...expenseFilter} />
+          </div>
+
+          <SummaryCard
+            expenses={expenses}
+            from={filter.from}
+            to={filter.to}
+            isLoading={isLoading}
+            isFetching={query.isFetching}
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <ChartCard
+              title="Spending by Category"
+              skeleton={<DonutChartSkeleton />}
+              isLoading={isLoading}
+              isRefetching={isRefetching}
+            >
+              <ExpenseChart expenses={expenses} />
+            </ChartCard>
+
+            <ChartCard
+              title="Expenses Trend"
+              skeleton={<BarChartSkeleton />}
+              isLoading={isLoading}
+              isRefetching={isRefetching}
+            >
+              <MonthlyTrendsChart
+                expenses={expenses}
+                from={filter.from}
+                to={filter.to}
+                period={filter.period}
+              />
+            </ChartCard>
+          </div>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between py-3 px-4">
+              <CardTitle className="text-base flex items-center gap-2">
+                {isLoading ? <Skeleton className="h-5 w-24" /> : (
+                  <>
+                    Expenses
+                    {isRefetching && <Spinner className="size-3.5 text-muted-foreground" />}
+                  </>
+                )}
+              </CardTitle>
+            </CardHeader>
+
+            {isLoading ? (
+              <CardContent className="pt-0"><ExpenseListSkeleton /></CardContent>
+            ) : query.isError ? (
+              <CardContent className="pt-0">
+                <div className="flex flex-col items-center gap-3 py-10 text-muted-foreground">
+                  <p className="text-sm">Failed to load expenses.</p>
+                  <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+                    <RefreshCw className="size-4" /> Retry
+                  </Button>
+                </div>
+              </CardContent>
+            ) : (
+              <div className={cn("transition-opacity duration-200", isRefetching && "opacity-50")}>
+                <ExpenseTable expenses={expenses} />
+              </div>
+            )}
+          </Card>
+        </main>
+      )}
     </div>
-  );
+  )
 }
