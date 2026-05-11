@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const passwordHash = await bcrypt.hash(password, 10)
     const id = crypto.randomUUID()
     db.insert(users).values({ id, username, email, passwordHash, role: "user", createdAt: Date.now() }).run()
-    logActivity(id, "register")
+    logActivity(id, "register", `New account registered: ${username}`)
 
     const token = await signToken({ userId: id, username, role: "user" })
     return NextResponse.json(

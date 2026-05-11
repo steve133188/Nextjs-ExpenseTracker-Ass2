@@ -1,7 +1,6 @@
 "use client"
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 export interface AuthUser {
@@ -18,7 +17,6 @@ async function fetchCurrentUser(): Promise<AuthUser | null> {
 
 export function useAuth() {
   const queryClient = useQueryClient()
-  const router      = useRouter()
 
   const query = useQuery<AuthUser | null>({
     queryKey:  ["auth"],
@@ -31,7 +29,7 @@ export function useAuth() {
     mutationFn: () => fetch("/api/auth/logout", { method: "POST" }).then((r) => r.json()),
     onSuccess: () => {
       queryClient.clear()
-      router.push("/login")
+      window.location.href = "/login"
     },
     onError: () => toast.error("Logout failed"),
   })

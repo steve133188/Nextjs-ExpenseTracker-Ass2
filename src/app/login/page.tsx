@@ -108,7 +108,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ fontFamily: "var(--font-playfair)" }}>
+          <CardTitle className="text-2xl">
             Ledger
           </CardTitle>
           <CardDescription>Personal Expense Tracker</CardDescription>

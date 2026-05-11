@@ -81,9 +81,16 @@ export function AdminPanel({ currentUserId }: { currentUserId: string }) {
         </CardHeader>
         <CardContent className="pt-0 px-0">
           <Table>
+            <colgroup>
+              <col className="w-[15%]" />
+              <col className="w-[35%]" />
+              <col className="w-[10%]" />
+              <col className="w-[15%]" />
+              <col className="w-[25%]" />
+            </colgroup>
             <TableHeader>
               <TableRow>
-                <TableHead>Username</TableHead>
+                <TableHead className="pl-4">Username</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Joined</TableHead>
@@ -95,13 +102,22 @@ export function AdminPanel({ currentUserId }: { currentUserId: string }) {
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <TableRow key={i}>
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                        <TableCell key={j} className={j === 0 ? "pl-4" : j === 4 ? "pr-4" : ""}><Skeleton className="h-4 w-full" /></TableCell>
                       ))}
                     </TableRow>
                   ))
+                : usersQuery.isError
+                ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="pl-4 py-8 text-sm text-muted-foreground">
+                        Failed to load users.{" "}
+                        <button className="underline" onClick={() => usersQuery.refetch()}>Retry</button>
+                      </TableCell>
+                    </TableRow>
+                  )
                 : (usersQuery.data ?? []).map((user) => (
                     <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.username}</TableCell>
+                      <TableCell className="font-medium pl-4">{user.username}</TableCell>
                       <TableCell className="text-muted-foreground text-sm">{user.email}</TableCell>
                       <TableCell>
                         <Badge variant={user.role === "admin" ? "default" : "secondary"}>
@@ -150,12 +166,18 @@ export function AdminPanel({ currentUserId }: { currentUserId: string }) {
         </CardHeader>
         <CardContent className="pt-0 px-0">
           <Table>
+            <colgroup>
+              <col className="w-[15%]" />
+              <col className="w-[20%]" />
+              <col className="w-[45%]" />
+              <col className="w-[20%]" />
+            </colgroup>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
+                <TableHead className="pl-4">User</TableHead>
                 <TableHead>Action</TableHead>
                 <TableHead>Detail</TableHead>
-                <TableHead>Time</TableHead>
+                <TableHead className="pr-4">Time</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -163,22 +185,31 @@ export function AdminPanel({ currentUserId }: { currentUserId: string }) {
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
                       {Array.from({ length: 4 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                        <TableCell key={j} className={j === 0 ? "pl-4" : j === 3 ? "pr-4" : ""}><Skeleton className="h-4 w-full" /></TableCell>
                       ))}
                     </TableRow>
                   ))
+                : activitiesQuery.isError
+                ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="pl-4 py-8 text-sm text-muted-foreground">
+                        Failed to load activity log.{" "}
+                        <button className="underline" onClick={() => activitiesQuery.refetch()}>Retry</button>
+                      </TableCell>
+                    </TableRow>
+                  )
                 : (activitiesQuery.data ?? []).map((activity) => (
                     <TableRow key={activity.id}>
-                      <TableCell className="font-medium">{activity.username}</TableCell>
+                      <TableCell className="font-medium pl-4">{activity.username}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-xs font-mono">
                           {activity.action}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {activity.detail || "—"}
+                        {activity.detail || null}
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-sm text-muted-foreground pr-4">
                         {format(new Date(activity.createdAt), "dd MMM HH:mm")}
                       </TableCell>
                     </TableRow>

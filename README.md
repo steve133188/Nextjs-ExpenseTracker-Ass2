@@ -2,6 +2,20 @@
 
 A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise their spending patterns with interactive charts, and filter by date range or category. Administrators can manage user accounts and review a complete audit log of all activity.
 
+## Technical Design Decisions
+
+**TanStack Query over plain `useState` + `useEffect`** — Provides automatic caching, background refetch, deduplication, and loading/error states out of the box. A manual fetch-in-useEffect approach would require reimplementing all of this and is prone to race conditions.
+
+**JWT in HttpOnly cookie over `localStorage`** — HttpOnly cookies are inaccessible to JavaScript, eliminating XSS-based token theft. The token is verified in Next.js Edge Middleware on every request, so protected routes are enforced server-side before any component renders.
+
+**Next.js Middleware for auth + role-based access** — Centralises authentication logic in one place instead of duplicating guards in every API route handler. The middleware injects verified user context as request headers, so route handlers never need to re-verify the token.
+
+**Drizzle ORM over raw SQL** — Type-safe queries catch schema mismatches at compile time. The schema file (`src/lib/schema.ts`) serves as the single source of truth for both the database structure and TypeScript types.
+
+**`react-hook-form` + Zod** — Zod schemas are shared between client-side form validation and server-side API validation (`expenseSchema`), preventing duplication and ensuring the same rules apply at both layers.
+
+**SQLite for persistence** — Appropriate for a single-user or small-group deployment; no external database server required. Drizzle Kit handles schema migrations.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -37,8 +51,8 @@ npm run db:seed
 Open [http://localhost:3000](http://localhost:3000).
 
 Demo accounts (after seeding):
-- `admin@ledger.local` / `admin1234` — admin role
-- `demo@ledger.local` / `demo1234` — regular user
+- `alice.wong92@gmail.com` / `admin1234` — admin role
+- `james.hl.lee@gmail.com` / `demo1234` — regular user
 
 ### Other scripts
 
@@ -46,7 +60,7 @@ Demo accounts (after seeding):
 |---------|---------|
 | `npm run db:push` | Apply schema changes to SQLite |
 | `npm run db:seed` | Populate DB with demo users and expenses |
-| `npm run db:export` | Export DB contents to `data/expenses-export.json` |
+| `npm run db:export` | Export DB contents to `data/db-export.json` |
 | `npm run build` | Production build |
 
 ## Folder Structure

@@ -3,14 +3,16 @@ import { clearCookieHeader } from "@/lib/auth"
 import { logActivity } from "@/lib/activity"
 
 export async function POST(request: Request) {
+  const userId   = request.headers.get("x-user-id")
+  const username = request.headers.get("x-username")
+
+  // Always clear the cookie — never let activity logging block logout
   try {
-    const userId = request.headers.get("x-user-id")
-    if (userId) logActivity(userId, "logout")
-    return NextResponse.json(
-      { success: true },
-      { headers: { "Set-Cookie": clearCookieHeader() } }
-    )
-  } catch (err) {
-    return NextResponse.json({ error: (err as Error).message }, { status: 500 })
-  }
+    if (userId) logActivity(userId, "logout", `${username ?? "User"} signed out`)
+  } catch {}
+
+  return NextResponse.json(
+    { success: true },
+    { headers: { "Set-Cookie": clearCookieHeader() } }
+  )
 }

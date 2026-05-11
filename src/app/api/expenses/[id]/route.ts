@@ -30,7 +30,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: result.error.flatten() }, { status: 400 })
     }
     const updated = db.update(expenses).set(result.data).where(eq(expenses.id, id)).returning().get()
-    logActivity(userId, "update_expense", result.data.title)
+    logActivity(userId, "update_expense", `Updated expense: ${result.data.title} ($${result.data.amount.toFixed(2)})`)
     return NextResponse.json(updated)
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })
@@ -45,7 +45,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     if (!existing) return NextResponse.json({ error: "Expense not found" }, { status: 404 })
 
     db.delete(expenses).where(eq(expenses.id, id)).run()
-    logActivity(userId, "delete_expense", existing.title)
+    logActivity(userId, "delete_expense", `Deleted expense: ${existing.title} ($${existing.amount.toFixed(2)})`)
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })

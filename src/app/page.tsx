@@ -97,7 +97,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex items-center gap-3 max-w-5xl">
-          <span className="text-xl font-semibold tracking-tight" style={{ fontFamily: "var(--font-playfair)" }}>
+          <span className="text-xl font-semibold tracking-tight">
             Ledger
           </span>
           <span className="hidden sm:block text-xs text-muted-foreground font-mono tracking-widest uppercase pt-0.5">

@@ -5,7 +5,7 @@ This project was completed individually (group size: 1).
 ## Author: Steve Chak — All files
 
 ### Backend
-- `middleware.ts` — JWT route protection and user context injection
+- `src/middleware.ts` — JWT route protection, role-based access control, and user context injection
 - `src/lib/schema.ts` — Database schema definitions
 - `src/lib/auth.ts` — JWT sign/verify and cookie helpers
 - `src/lib/activity.ts` — Activity logging helper

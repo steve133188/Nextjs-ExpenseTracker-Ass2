@@ -6,7 +6,7 @@
     "db:push": "drizzle-kit push",
     "db:export": "npx tsx scripts/export-db.js",
     "db:seed": "npx tsx scripts/seed-db.js",
-    "dev": "drizzle-kit push && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

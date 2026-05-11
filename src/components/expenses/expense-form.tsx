@@ -51,6 +51,8 @@ export function ExpenseForm({ id, defaultValues, onSubmit, isPending, onValidity
     },
   })
 
+  // Trigger validation once on mount so pre-filled edit forms show correct validity immediately.
+  // trigger is intentionally omitted from deps — it changes identity every render and would loop.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (defaultValues) trigger() }, [])
   useEffect(() => { onValidityChange?.(isValid) }, [isValid, onValidityChange])
