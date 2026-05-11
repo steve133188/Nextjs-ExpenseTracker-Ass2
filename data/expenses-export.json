@@ -1,0 +1,342 @@
+[
+  {
+    "id": "ac98a626-1fc9-4c5e-b787-d3e44a4b357b",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Monthly rent",
+    "amount": 1500,
+    "category": "Housing",
+    "date": "2026-01-01",
+    "description": "",
+    "createdAt": 1767229200000
+  },
+  {
+    "id": "c0dce462-87f6-4371-b1ad-1c2ed462b9b4",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Grocery shopping",
+    "amount": 87.5,
+    "category": "Food & Dining",
+    "date": "2026-01-03",
+    "description": "Weekly groceries",
+    "createdAt": 1767402060000
+  },
+  {
+    "id": "66cb217c-1c93-4b0e-ae9d-066d3e50e9d5",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Bus pass",
+    "amount": 45,
+    "category": "Transportation",
+    "date": "2026-01-06",
+    "description": "Monthly transit pass",
+    "createdAt": 1767661320000
+  },
+  {
+    "id": "f9daf387-3018-40a4-8455-f60d321564d5",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Gym membership",
+    "amount": 55,
+    "category": "Health & Medical",
+    "date": "2026-01-06",
+    "description": "New Year resolution",
+    "createdAt": 1767661380000
+  },
+  {
+    "id": "4813bf1f-cc36-4eeb-9fab-5533e45048cd",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Dinner with friends",
+    "amount": 62,
+    "category": "Food & Dining",
+    "date": "2026-01-10",
+    "description": "Italian restaurant",
+    "createdAt": 1768007040000
+  },
+  {
+    "id": "e1419753-030d-4bac-9e5b-d5af20ae9795",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "New headphones",
+    "amount": 129.99,
+    "category": "Shopping",
+    "date": "2026-01-15",
+    "description": "Sony WH-1000XM5",
+    "createdAt": 1768439100000
+  },
+  {
+    "id": "279b1a8c-9dd6-438d-9213-8286adc7fdc2",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Textbooks",
+    "amount": 210,
+    "category": "Education",
+    "date": "2026-01-17",
+    "description": "Semester textbooks",
+    "createdAt": 1768611960000
+  },
+  {
+    "id": "0245cb95-0bb2-4a10-b582-7d5c87d102ec",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Movie night",
+    "amount": 28,
+    "category": "Entertainment",
+    "date": "2026-01-20",
+    "description": "Tickets + popcorn",
+    "createdAt": 1768871220000
+  },
+  {
+    "id": "c8e73622-c76d-4093-8d23-2cc52be5dddc",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Coffee subscription",
+    "amount": 18,
+    "category": "Food & Dining",
+    "date": "2026-01-22",
+    "description": "Monthly coffee beans",
+    "createdAt": 1769044080000
+  },
+  {
+    "id": "2cc3e82d-5f80-41b0-9f1e-998a046e2677",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Electricity bill",
+    "amount": 74.3,
+    "category": "Housing",
+    "date": "2026-01-28",
+    "description": "Cold month",
+    "createdAt": 1769562540000
+  },
+  {
+    "id": "9004a5dd-9cf7-4a8d-a09e-a00294b07764",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Monthly rent",
+    "amount": 1500,
+    "category": "Housing",
+    "date": "2026-02-01",
+    "description": "",
+    "createdAt": 1769908200000
+  },
+  {
+    "id": "eb7d5f8a-b7d8-42d4-8fda-b19a3e110df6",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Grocery shopping",
+    "amount": 91.2,
+    "category": "Food & Dining",
+    "date": "2026-02-02",
+    "description": "Weekly groceries",
+    "createdAt": 1769994660000
+  },
+  {
+    "id": "5f4b9b20-2ca9-4c8f-86fc-c14c3761b000",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Bus pass",
+    "amount": 45,
+    "category": "Transportation",
+    "date": "2026-02-04",
+    "description": "Monthly transit pass",
+    "createdAt": 1770167520000
+  },
+  {
+    "id": "919c81de-76c2-44dc-b781-b251f6cd28e3",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Gym membership",
+    "amount": 55,
+    "category": "Health & Medical",
+    "date": "2026-02-04",
+    "description": "",
+    "createdAt": 1770167580000
+  },
+  {
+    "id": "54ec3eeb-295e-467a-98c1-1728775ff6d6",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Valentine's dinner",
+    "amount": 95,
+    "category": "Food & Dining",
+    "date": "2026-02-14",
+    "description": "Special occasion",
+    "createdAt": 1771031640000
+  },
+  {
+    "id": "81910f4f-1061-4fa8-8ed7-53f97e7eb32e",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Doctor visit",
+    "amount": 50,
+    "category": "Health & Medical",
+    "date": "2026-02-16",
+    "description": "General checkup",
+    "createdAt": 1771204500000
+  },
+  {
+    "id": "48fbfab8-60bf-42a6-a286-c11017f9d07c",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Winter jacket",
+    "amount": 189,
+    "category": "Shopping",
+    "date": "2026-02-18",
+    "description": "On sale 30% off",
+    "createdAt": 1771377360000
+  },
+  {
+    "id": "7d1835ed-e6b4-4648-b334-88b41685e31b",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Online course",
+    "amount": 79,
+    "category": "Education",
+    "date": "2026-02-20",
+    "description": "React advanced",
+    "createdAt": 1771550220000
+  },
+  {
+    "id": "2c4848c6-5cfe-4667-94fc-a2f70470244e",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Concert tickets",
+    "amount": 110,
+    "category": "Entertainment",
+    "date": "2026-02-22",
+    "description": "Live music event",
+    "createdAt": 1771723080000
+  },
+  {
+    "id": "fd1483cd-cc34-4c39-9d69-94b5d61e3226",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Internet bill",
+    "amount": 59.99,
+    "category": "Housing",
+    "date": "2026-02-26",
+    "description": "",
+    "createdAt": 1772068740000
+  },
+  {
+    "id": "36db44f0-8517-448a-b742-e4b40bda826c",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Monthly rent",
+    "amount": 1500,
+    "category": "Housing",
+    "date": "2026-03-01",
+    "description": "",
+    "createdAt": 1772328000000
+  },
+  {
+    "id": "230c529b-36eb-4869-b575-04870fc1c08a",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Grocery shopping",
+    "amount": 78.4,
+    "category": "Food & Dining",
+    "date": "2026-03-03",
+    "description": "Weekly groceries",
+    "createdAt": 1772500860000
+  },
+  {
+    "id": "a93adc18-c700-4a64-8dda-d977456649a7",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Bus pass",
+    "amount": 45,
+    "category": "Transportation",
+    "date": "2026-03-04",
+    "description": "Monthly transit pass",
+    "createdAt": 1772587320000
+  },
+  {
+    "id": "4a3c7085-2afb-4424-84a1-768c636e6644",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Gym membership",
+    "amount": 55,
+    "category": "Health & Medical",
+    "date": "2026-03-04",
+    "description": "",
+    "createdAt": 1772587380000
+  },
+  {
+    "id": "2eb8280f-a802-4641-b372-c12d327a8276",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Flight home",
+    "amount": 320,
+    "category": "Travel",
+    "date": "2026-03-07",
+    "description": "Return flight for break",
+    "createdAt": 1772846640000
+  },
+  {
+    "id": "dd5f99ca-4f15-4fac-aec2-03bceabe1de0",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Hotel stay",
+    "amount": 240,
+    "category": "Travel",
+    "date": "2026-03-08",
+    "description": "2 nights",
+    "createdAt": 1772933100000
+  },
+  {
+    "id": "d9e1a4d5-5275-4151-90ba-30d662805001",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Lunch at work",
+    "amount": 54,
+    "category": "Food & Dining",
+    "date": "2026-03-11",
+    "description": "5 days of lunch",
+    "createdAt": 1773192360000
+  },
+  {
+    "id": "d042a730-7d4e-4524-8385-d4409c903917",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Fuel",
+    "amount": 65,
+    "category": "Transportation",
+    "date": "2026-03-14",
+    "description": "Full tank",
+    "createdAt": 1773451620000
+  },
+  {
+    "id": "c43e33b0-85c2-4426-9eb4-d21dd189a175",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Spotify + Netflix",
+    "amount": 28.98,
+    "category": "Entertainment",
+    "date": "2026-03-16",
+    "description": "Monthly subscriptions",
+    "createdAt": 1773624480000
+  },
+  {
+    "id": "005412ac-49dc-4d57-9ffa-7b315230627c",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Running shoes",
+    "amount": 149,
+    "category": "Shopping",
+    "date": "2026-03-19",
+    "description": "Nike Pegasus",
+    "createdAt": 1773883740000
+  },
+  {
+    "id": "b1273933-289a-4e49-8dde-3cf411cdf2d6",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Monthly rent",
+    "amount": 1500,
+    "category": "Housing",
+    "date": "2026-04-01",
+    "description": "",
+    "createdAt": 1775007000000
+  },
+  {
+    "id": "5f701448-29b0-4a29-bdf6-fddf8f2e7f43",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Grocery shopping",
+    "amount": 76.3,
+    "category": "Food & Dining",
+    "date": "2026-04-02",
+    "description": "Weekly groceries",
+    "createdAt": 1775093460000
+  },
+  {
+    "id": "10f13be2-83fc-4122-9bd0-f806bf8be3eb",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Bus pass",
+    "amount": 45,
+    "category": "Transportation",
+    "date": "2026-04-03",
+    "description": "Monthly transit pass",
+    "createdAt": 1775179920000
+  },
+  {
+    "id": "21b7b48c-197e-4ad5-bbde-206aa2891e67",
+    "userId": "bb3ff6b3-7a9d-47eb-8aea-ccb3c1d469b2",
+    "title": "Coffee & snacks",
+    "amount": 12.5,
+    "category": "Food & Dining",
+    "date": "2026-04-05",
+    "description": "Study session",
+    "createdAt": 1775356380000
+  }
+]
