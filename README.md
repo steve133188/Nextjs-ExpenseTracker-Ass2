@@ -51,8 +51,8 @@ npm run db:seed
 Open [http://localhost:3000](http://localhost:3000).
 
 Demo accounts (after seeding):
-- `alice.wong92@gmail.com` / `admin1234` — admin role
-- `james.hl.lee@gmail.com` / `demo1234` — regular user
+- `root@test.com` / `admin1234` — admin role
+- `demo1@test.com` / `demo1234` — regular user
 
 ### Other scripts
 
@@ -67,27 +67,29 @@ Demo accounts (after seeding):
 
 ```
 ├── data/                    # SQLite database file and JSON export (git-ignored)
-├── docs/                    # Project documentation
 ├── public/                  # Static assets
 ├── scripts/
 │   ├── seed-db.js           # Populates DB with demo users and sample expenses
 │   └── export-db.js         # Exports DB contents to JSON for submission
 ├── src/
+│   ├── middleware.ts        # JWT verification, role-based access, header injection
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── auth/        # register, login, logout, me endpoints
+│   │   │   ├── auth/        # register, login, logout, me (+ change password) endpoints
 │   │   │   ├── expenses/    # CRUD endpoints for expense items
-│   │   │   └── admin/       # Admin-only endpoints: user CRUD (create/list/role/delete) and activity log
+│   │   │   └── admin/       # Admin-only: user CRUD, password reset, activity log
 │   │   ├── login/           # /login page (authentication)
 │   │   ├── globals.css      # Global styles and Tailwind theme
 │   │   ├── layout.tsx       # Root layout (fonts, providers)
 │   │   └── page.tsx         # Main dashboard (expenses + admin panel)
 │   ├── components/
-│   │   ├── admin/           # Admin panel (user table, activity log)
+│   │   ├── admin/           # Admin panel: user table, activity log, create/reset dialogs
+│   │   ├── auth/            # User menu dropdown, change password dialog
 │   │   ├── expenses/        # Expense table, form, dialog, filters, charts
 │   │   └── ui/              # shadcn/ui primitives
 │   ├── hooks/
-│   │   ├── use-auth.ts      # Authentication state (current user, logout)
+│   │   ├── use-auth.ts      # Authentication state and change-password mutation
+│   │   ├── use-admin.ts     # Admin queries and mutations (users, activities, password reset)
 │   │   ├── use-expenses.ts  # Expense CRUD mutations and queries
 │   │   ├── use-expense-filter.ts  # Filter state (date range, categories)
 │   │   └── use-expense-table.ts   # Table state (sorting, pagination)
@@ -100,7 +102,6 @@ Demo accounts (after seeding):
 │   │   └── utils.ts         # Shared utility functions
 │   └── providers/
 │       └── query-provider.tsx  # TanStack Query client provider
-├── src/middleware.ts         # JWT verification and route protection
 ├── .env.local               # Environment variables (not committed)
 └── WORKLOAD.md              # Workload allocation statement
 ```
