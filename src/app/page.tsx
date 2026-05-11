@@ -104,20 +104,20 @@ export default function Home() {
             Expense Tracker
           </span>
 
-          {/* Tab switcher */}
-          <div className="flex items-center ml-4 bg-muted rounded-lg p-1 gap-0.5">
-            <button
-              onClick={() => setTab("expenses")}
-              className={cn(
-                "px-3 py-1 text-sm rounded-md transition-all",
-                tab === "expenses"
-                  ? "bg-background shadow-sm text-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              My Expenses
-            </button>
-            {user.role === "admin" && (
+          {/* Tab switcher — only visible to admins who have multiple tabs */}
+          {user.role === "admin" && (
+            <div className="flex items-center ml-4 bg-muted rounded-lg p-1 gap-0.5">
+              <button
+                onClick={() => setTab("expenses")}
+                className={cn(
+                  "px-3 py-1 text-sm rounded-md transition-all",
+                  tab === "expenses"
+                    ? "bg-background shadow-sm text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                My Expenses
+              </button>
               <button
                 onClick={() => setTab("admin")}
                 className={cn(
@@ -129,8 +129,8 @@ export default function Home() {
               >
                 Admin
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="ml-auto flex items-center gap-2">
             {tab === "expenses" && (
