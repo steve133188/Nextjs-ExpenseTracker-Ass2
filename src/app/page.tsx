@@ -240,7 +240,10 @@ export default function Home() {
               </CardContent>
             ) : (
               <div className={cn("transition-opacity duration-200", isRefetching && "opacity-50")}>
-                <ExpenseTable expenses={expenses} />
+                <ExpenseTable
+                  key={`${searchQuery}|${filter.categories.join(",")}|${filter.from ?? ""}|${filter.to ?? ""}`}
+                  expenses={expenses}
+                />
               </div>
             )}
           </Card>
