@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useTheme } from "next-themes"
-import { Sun, Moon, KeyRound, LogOut, ChevronDown } from "lucide-react"
+import { Sun, Moon, KeyRound, LogOut, ChevronDown, LayoutDashboard } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { ChangePasswordDialog } from "@/components/auth/change-password-dialog"
 import {
@@ -32,6 +33,14 @@ export function UserMenu() {
             {user.username}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          {user.role === "admin" && (
+            <DropdownMenuItem asChild>
+              <Link href="/admin" className="flex items-center gap-2">
+                <LayoutDashboard className="size-4" />
+                Admin Panel
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
             {theme === "dark"
               ? <><Sun className="size-4" /> Light mode</>

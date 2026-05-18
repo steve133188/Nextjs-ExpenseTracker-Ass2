@@ -48,6 +48,10 @@ export async function middleware(request: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    if (pathname.startsWith("/admin") && role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url))
+    }
+
     const headers = new Headers(request.headers)
     headers.set("x-user-id",   userId)
     headers.set("x-user-role", role)

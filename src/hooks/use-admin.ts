@@ -18,6 +18,11 @@ export interface Activity {
   createdAt: number
 }
 
+export interface PaginatedActivities {
+  rows:  Activity[]
+  total: number
+}
+
 export function useAdminUsers() {
   return useQuery<AdminUser[]>({
     queryKey: ["admin", "users"],
@@ -25,10 +30,11 @@ export function useAdminUsers() {
   })
 }
 
-export function useAdminActivities() {
-  return useQuery<Activity[]>({
-    queryKey: ["admin", "activities"],
-    queryFn:  () => fetch("/api/admin/activities").then((r) => r.json()),
+export function useAdminActivities(page = 0, pageSize = 20) {
+  return useQuery<PaginatedActivities>({
+    queryKey: ["admin", "activities", page],
+    queryFn:  () =>
+      fetch(`/api/admin/activities?limit=${pageSize}&offset=${page * pageSize}`).then((r) => r.json()),
   })
 }
 

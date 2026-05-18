@@ -8,15 +8,18 @@ import { ResetPasswordDialog } from "@/components/admin/reset-password-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
 
 export function UserManagementCard({ currentUserId }: { currentUserId: string }) {
-  const usersQuery  = useAdminUsers()
-  const changeRole  = useChangeRole()
-  const deleteUser  = useDeleteUser()
+  const usersQuery = useAdminUsers()
+  const changeRole = useChangeRole()
+  const deleteUser = useDeleteUser()
 
   return (
     <Card>
@@ -31,9 +34,9 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
           <colgroup>
             <col className="w-[13%]" />
             <col className="w-[28%]" />
-            <col className="w-[9%]" />
+            <col className="w-[12%]" />
             <col className="w-[13%]" />
-            <col className="w-[37%]" />
+            <col className="w-[34%]" />
           </colgroup>
           <TableHeader>
             <TableRow>
@@ -69,37 +72,46 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
                     <TableCell className="font-medium pl-4">{user.username}</TableCell>
                     <TableCell className="text-muted-foreground text-sm">{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={user.role === "admin" ? "default" : "secondary"}>
-                        {user.role}
-                      </Badge>
+                      {user.id === currentUserId ? (
+                        <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+                          {user.role}
+                        </Badge>
+                      ) : (
+                        <Select
+                          value={user.role}
+                          disabled={changeRole.isPending}
+                          onValueChange={(role) => changeRole.mutate({ id: user.id, role })}
+                        >
+                          <SelectTrigger className="h-7 w-24 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="user">user</SelectItem>
+                            <SelectItem value="admin">admin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {format(new Date(user.createdAt), "dd MMM yyyy")}
                     </TableCell>
                     <TableCell className="text-right pr-4">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 text-xs"
-                          disabled={user.id === currentUserId || changeRole.isPending}
-                          onClick={() =>
-                            changeRole.mutate({ id: user.id, role: user.role === "admin" ? "user" : "admin" })
-                          }
-                        >
-                          {user.role === "admin" ? "→ user" : "→ admin"}
-                        </Button>
-                        <ResetPasswordDialog userId={user.id} username={user.username} />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-destructive hover:text-destructive"
-                          disabled={user.id === currentUserId || deleteUser.isPending}
-                          onClick={() => deleteUser.mutate(user.id)}
-                        >
-                          <Trash2 className="size-3.5" />
-                        </Button>
-                      </div>
+                      {user.id === currentUserId ? (
+                        <span className="text-xs text-muted-foreground italic">you</span>
+                      ) : (
+                        <div className="flex items-center justify-end gap-1">
+                          <ResetPasswordDialog userId={user.id} username={user.username} />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            disabled={deleteUser.isPending}
+                            onClick={() => deleteUser.mutate(user.id)}
+                          >
+                            <Trash2 className="size-3.5" />
+                          </Button>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
