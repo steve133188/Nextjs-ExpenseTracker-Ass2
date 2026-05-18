@@ -47,4 +47,3 @@ next-env.d.ts
 !/data/expenses-export.json
 
 .env.local
-docs/superpowers/
