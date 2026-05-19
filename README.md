@@ -1,6 +1,6 @@
 # Expense Tracker
 
-**GitHub:** https://github.com/steve133188/-Nextjs-ExpenseTracker-Ass2
+**GitHub:** https://github.com/steve133188/Nextjs-ExpenseTracker-Ass2
 
 A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise spending patterns with interactive charts, and filter by date range or category. Administrators have a dedicated panel to manage all user accounts (including role assignment and password reset) and review a complete audit log of all activity.
 
