@@ -4,10 +4,10 @@ import { useState, useMemo } from "react"
 import { useDeleteExpense } from "@/hooks/use-expenses"
 import type { Expense } from "@/lib/schema"
 
-const PAGE_SIZE = 10
+export const PAGE_SIZE = 10
 
-type SortKey = "date" | "amount"
-type SortDir = "asc" | "desc"
+export type SortKey = "date" | "amount"
+export type SortDir = "asc" | "desc"
 
 export function useExpenseTable(expenses: Expense[]) {
   const deleteExpense = useDeleteExpense()

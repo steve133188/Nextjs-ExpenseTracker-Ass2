@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Plus, RefreshCw, Search } from "lucide-react"
+import { Plus, RefreshCw, Search, X } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useExpenses } from "@/hooks/use-expenses"
 import { useExpenseFilter } from "@/hooks/use-expense-filter"
@@ -60,10 +60,11 @@ export default function Home() {
   const expenseFilter = useExpenseFilter()
   const { filter }    = expenseFilter
 
-  const query         = useExpenses({ categories: filter.categories, from: filter.from, to: filter.to })
-  const isLoading     = query.isLoading
-  const isRefetching  = query.isFetching && !query.isLoading
+  const query        = useExpenses({ categories: filter.categories, from: filter.from, to: filter.to })
+  const isLoading    = query.isLoading
+  const isRefetching = query.isFetching && !query.isLoading
 
+  // Client-side live search over already-fetched expenses — avoids extra round trips
   const expenses = useMemo(() => {
     const all = query.data ?? []
     const q = searchQuery.trim().toLowerCase()
@@ -85,14 +86,15 @@ export default function Home() {
 
   if (!user) return null
 
+  const allExpenses   = query.data ?? []
+  const isSearching   = searchQuery.trim().length > 0
+  const resultCount   = isSearching ? `${expenses.length} of ${allExpenses.length}` : allExpenses.length
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex items-center gap-3 max-w-5xl">
           <span className="text-xl font-semibold tracking-tight">
-            Ledger
-          </span>
-          <span className="hidden sm:block text-xs text-muted-foreground font-mono tracking-widest uppercase pt-0.5">
             Expense Tracker
           </span>
           <div className="ml-auto flex items-center gap-2">
@@ -111,16 +113,6 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-5xl space-y-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-          <Input
-            className="pl-9"
-            placeholder="Search expenses by title or description…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
         <div className="rounded-lg border bg-card px-4 py-2.5">
           <ExpenseFilters {...expenseFilter} />
         </div>
@@ -159,15 +151,36 @@ export default function Home() {
         </div>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between py-3 px-4">
-            <CardTitle className="text-base flex items-center gap-2">
+          <CardHeader className="flex flex-row items-center justify-between py-3 px-4 gap-4">
+            <CardTitle className="text-base flex items-center gap-2 shrink-0">
               {isLoading ? <Skeleton className="h-5 w-24" /> : (
                 <>
                   Expenses
+                  <span className="text-sm font-normal text-muted-foreground">{resultCount}</span>
                   {isRefetching && <Spinner className="size-3.5 text-muted-foreground" />}
                 </>
               )}
             </CardTitle>
+
+            {/* Live search — filters already-fetched expenses without a server round trip */}
+            <div className="relative w-full max-w-xs">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+              <Input
+                className="pl-8 pr-8 h-8 text-sm"
+                placeholder="Search expenses…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
           </CardHeader>
 
           {isLoading ? (
@@ -183,6 +196,7 @@ export default function Home() {
             </CardContent>
           ) : (
             <div className={cn("transition-opacity duration-200", isRefetching && "opacity-50")}>
+              {/* key resets sort/page state when filters or search change */}
               <ExpenseTable
                 key={`${searchQuery}|${filter.categories.join(",")}|${filter.from ?? ""}|${filter.to ?? ""}`}
                 expenses={expenses}

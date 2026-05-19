@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Ledger — Expense Tracker",
+  title: "Expense Tracker",
   description: "Track and manage your personal expenses",
 }
 

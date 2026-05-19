@@ -109,7 +109,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl">
-            Ledger
+            Expense Tracker
           </CardTitle>
           <CardDescription>Personal Expense Tracker</CardDescription>
         </CardHeader>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { or, eq } from "drizzle-orm"
+import { or, eq, asc } from "drizzle-orm"
 import bcrypt from "bcryptjs"
 import { db } from "@/lib/db"
 import { users } from "@/lib/schema"
@@ -14,7 +14,7 @@ export async function GET() {
       email:     users.email,
       role:      users.role,
       createdAt: users.createdAt,
-    }).from(users).all()
+    }).from(users).orderBy(asc(users.createdAt)).all()
     return NextResponse.json(rows)
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })

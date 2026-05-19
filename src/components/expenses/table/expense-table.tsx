@@ -1,8 +1,8 @@
 "use client"
 
-import { format } from "date-fns"
+import { format, parseISO } from "date-fns"
 import { Pencil, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
-import { useExpenseTable } from "@/hooks/use-expense-table"
+import { useExpenseTable, type SortKey, type SortDir } from "@/hooks/use-expense-table"
 import { ExpenseDialog } from "@/components/expenses/expense-dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -18,9 +18,6 @@ import {
   PaginationItem, PaginationNext, PaginationPrevious,
 } from "@/components/ui/pagination"
 import type { Expense } from "@/lib/schema"
-
-type SortKey = "date" | "amount"
-type SortDir = "asc" | "desc"
 
 function SortIcon({ column, sortKey, sortDir }: { column: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-40" />
@@ -69,7 +66,8 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
             {paginated.map((expense) => (
               <TableRow key={expense.id}>
                 <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
-                  {format(new Date(expense.date + "T00:00:00"), "MMM d, yyyy")}
+                  {/* parseISO requires a time component to treat the value as local midnight rather than UTC */}
+                  {format(parseISO(expense.date + "T00:00:00"), "MMM d, yyyy")}
                 </TableCell>
                 <TableCell>
                   <div className="font-medium">{expense.title}</div>

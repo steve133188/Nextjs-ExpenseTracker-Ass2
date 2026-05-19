@@ -1,4 +1,4 @@
-# Ledger — Personal Expense Tracker
+# Expense Tracker
 
 A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise their spending patterns with interactive charts, and filter by date range or category. Administrators can create, delete, and manage all user accounts (including role assignment) and review a complete audit log of all activity.
 

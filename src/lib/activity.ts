@@ -9,6 +9,8 @@ export type ActivityAction =
   | "update_expense"
   | "delete_expense"
   | "create_user"
+  | "change_role"
+  | "delete_user"
   | "change_password"
   | "reset_password"
 
