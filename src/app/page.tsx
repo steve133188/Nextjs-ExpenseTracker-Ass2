@@ -13,6 +13,7 @@ import { ExpenseTable } from "@/components/expenses/table/expense-table"
 import { ExpenseDialog } from "@/components/expenses/expense-dialog"
 import { ExpenseListSkeleton } from "@/components/expenses/table/expense-list-skeleton"
 import { DonutChartSkeleton, BarChartSkeleton } from "@/components/expenses/charts/chart-skeleton"
+import { ChartCard } from "@/components/expenses/chart-card"
 import { UserMenu } from "@/components/auth/user-menu"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -20,38 +21,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
-
-function ChartCard({
-  title, skeleton, isLoading, isRefetching, children,
-}: {
-  title: string
-  skeleton: React.ReactNode
-  isLoading: boolean
-  isRefetching: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-          {isLoading ? <Skeleton className="h-4 w-32" /> : (
-            <>
-              {title}
-              {isRefetching && <Spinner className="size-3 text-muted-foreground" />}
-            </>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? skeleton : (
-          <div className={cn("transition-opacity duration-200", isRefetching && "opacity-50")}>
-            {children}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  )
-}
 
 export default function Home() {
   const { user, isLoading: authLoading } = useAuth()

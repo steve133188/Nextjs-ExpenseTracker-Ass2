@@ -12,10 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select"
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+import { RoleConfirmDialog } from "@/components/admin/role-confirm-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -128,28 +125,11 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
         </Table>
       </CardContent>
 
-      <AlertDialog open={!!roleConfirm} onOpenChange={(open) => { if (!open) setRoleConfirm(null) }}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Change role?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Set <strong>{roleConfirm?.username}</strong> to{" "}
-              <strong>{roleConfirm?.newRole}</strong>. This will change their access level immediately.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (roleConfirm) changeRole.mutate({ id: roleConfirm.id, role: roleConfirm.newRole })
-                setRoleConfirm(null)
-              }}
-            >
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RoleConfirmDialog
+        target={roleConfirm}
+        onConfirm={(id, role) => { changeRole.mutate({ id, role }); setRoleConfirm(null) }}
+        onCancel={() => setRoleConfirm(null)}
+      />
     </Card>
   )
 }

@@ -1,22 +1,15 @@
 "use client"
 
 import { format, parseISO } from "date-fns"
-import { Pencil, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
+import { Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { useExpenseTable, type SortKey, type SortDir } from "@/hooks/use-expense-table"
 import { ExpenseDialog } from "@/components/expenses/expense-dialog"
+import { ExpenseDeleteDialog } from "@/components/expenses/table/expense-delete-dialog"
+import { ExpenseTablePagination } from "@/components/expenses/table/expense-table-pagination"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { categoryBadgeClass } from "@/lib/category-colors"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader,
-  AlertDialogTitle, AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import {
-  Pagination, PaginationContent, PaginationEllipsis,
-  PaginationItem, PaginationNext, PaginationPrevious,
-} from "@/components/ui/pagination"
 import type { Expense } from "@/lib/schema"
 
 function SortIcon({ column, sortKey, sortDir }: { column: SortKey; sortKey: SortKey; sortDir: SortDir }) {
@@ -30,7 +23,7 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
     paginated, page, setPage, totalPages,
     sortKey, sortDir, handleSort,
     deletingId, handleDelete,
-    pageSize, totalCount,
+    totalCount,
   } = useExpenseTable(expenses)
 
   if (expenses.length === 0) {
@@ -95,36 +88,11 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
                         </Button>
                       }
                     />
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8 text-destructive hover:text-destructive"
-                          disabled={deletingId === expense.id}
-                        >
-                          <Trash2 className="size-3.5" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete expense?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will permanently delete &quot;{expense.title}&quot;. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(expense.id)}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <ExpenseDeleteDialog
+                      expenseTitle={expense.title}
+                      disabled={deletingId === expense.id}
+                      onConfirm={() => handleDelete(expense.id)}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -133,55 +101,12 @@ export function ExpenseTable({ expenses }: { expenses: Expense[] }) {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="border-t px-4 py-3 flex items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
-            {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, totalCount)} of {totalCount}
-          </p>
-          <Pagination className="w-auto mx-0">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  aria-disabled={page === 1}
-                  className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(n => n === 1 || n === totalPages || Math.abs(n - page) <= 1)
-                .reduce<(number | "ellipsis")[]>((acc, n, idx, arr) => {
-                  if (idx > 0 && n - (arr[idx - 1] as number) > 1) acc.push("ellipsis")
-                  acc.push(n)
-                  return acc
-                }, [])
-                .map((item, idx) =>
-                  item === "ellipsis" ? (
-                    <PaginationItem key={`ellipsis-${idx}`}><PaginationEllipsis /></PaginationItem>
-                  ) : (
-                    <PaginationItem key={item}>
-                      <Button
-                        variant={item === page ? "outline" : "ghost"}
-                        size="icon"
-                        className="size-8"
-                        onClick={() => setPage(item as number)}
-                      >
-                        {item}
-                      </Button>
-                    </PaginationItem>
-                  )
-                )
-              }
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  aria-disabled={page === totalPages}
-                  className={page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+      <ExpenseTablePagination
+        page={page}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        onPageChange={setPage}
+      />
     </div>
   )
 }
