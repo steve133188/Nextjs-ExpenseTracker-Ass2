@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import { db } from "@/lib/db"
 import { users } from "@/lib/schema"
 import { logActivity } from "@/lib/activity"
-import { changePasswordSchema } from "@/lib/validations"
+import { z } from "zod"
 
 export async function GET(request: Request) {
   const userId   = request.headers.get("x-user-id")
@@ -14,13 +14,18 @@ export async function GET(request: Request) {
   return NextResponse.json({ id: userId, username, role })
 }
 
+const patchSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword:     z.string().min(8),
+})
+
 export async function PATCH(request: Request) {
   try {
     const userId = request.headers.get("x-user-id")!
     const body   = await request.json()
-    const result = changePasswordSchema.safeParse(body)
+    const result = patchSchema.safeParse(body)
     if (!result.success) {
-      return NextResponse.json({ error: result.error.flatten() }, { status: 400 })
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 })
     }
     const { currentPassword, newPassword } = result.data
 
