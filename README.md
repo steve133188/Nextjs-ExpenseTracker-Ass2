@@ -2,7 +2,7 @@
 
 **GitHub:** https://github.com/steve133188/Nextjs-ExpenseTracker-Ass2
 
-A full-stack web application that helps individuals track and manage their personal expenses. Users can record spending across nine categories, visualise spending patterns with interactive charts, and filter by date range or category. Administrators have a dedicated panel to manage all user accounts (including role assignment and password reset) and review a complete audit log of all activity.
+A full-stack web application for tracking personal spending. Users log expenses across nine categories, visualise patterns with interactive charts, and filter by date range or category. Administrators manage all accounts and review a complete audit log of every user action.
 
 ## Technical Design Decisions
 
@@ -42,10 +42,13 @@ npm install
 # 2. Create environment file
 echo "JWT_SECRET=replace-with-a-32-char-random-secret" > .env.local
 
-# 3. Push schema to SQLite and start the dev server
+# 3. Push schema to SQLite
+npm run db:push
+
+# 4. Start the dev server
 npm run dev
 
-# 4. (Optional) Seed the database with demo data and users
+# 5. (Optional) Seed the database with demo data
 npm run db:seed
 ```
 
@@ -67,70 +70,43 @@ Demo accounts (after seeding):
 ## Folder Structure
 
 ```
-├── data/                        # SQLite database file and JSON export (git-ignored)
-├── public/                      # Static assets
+├── data/                  # SQLite database file and JSON export (git-ignored)
 ├── scripts/
-│   ├── seed-db.js               # Populates DB with demo users and sample expenses
-│   └── export-db.js             # Exports DB contents to JSON for submission
+│   ├── seed-db.js         # Populates DB with demo users and sample expenses
+│   └── export-db.js       # Exports DB contents to JSON for submission
 ├── src/
-│   ├── middleware.ts             # JWT verification, role-based access, header injection
+│   ├── middleware.ts       # JWT verification, role-based access, header injection
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── auth/            # register, login, logout, me (+ change password) endpoints
-│   │   │   ├── expenses/        # CRUD endpoints for expense items
-│   │   │   └── admin/           # Admin-only: user CRUD, password reset, activity log
-│   │   ├── admin/               # /admin page — dedicated admin panel (role-protected)
-│   │   ├── login/               # /login page — sign in and register tabs
-│   │   ├── globals.css          # Global styles and Tailwind theme
-│   │   ├── layout.tsx           # Root layout (fonts, providers)
-│   │   ├── page.tsx             # Main dashboard (expenses, charts, filters)
-│   │   ├── error.tsx            # Global error boundary
-│   │   └── not-found.tsx        # 404 page
+│   │   │   ├── auth/      # register, login, logout, me (+ change password) endpoints
+│   │   │   ├── expenses/  # CRUD endpoints for expense items
+│   │   │   └── admin/     # Admin-only: user CRUD, password reset, activity log
+│   │   ├── admin/         # /admin page — dedicated admin panel (role-protected)
+│   │   ├── login/         # /login page — sign in and register tabs
+│   │   ├── page.tsx       # Main dashboard (expenses, charts, filters)
+│   │   └── layout.tsx     # Root layout (fonts, providers)
 │   ├── components/
-│   │   ├── admin/
-│   │   │   ├── activity-log-card.tsx      # Activity log table with pagination
-│   │   │   ├── create-user-dialog.tsx     # Admin create user dialog
-│   │   │   ├── reset-password-dialog.tsx  # Admin password reset dialog
-│   │   │   ├── role-confirm-dialog.tsx    # Role change confirmation dialog
-│   │   │   └── user-management-card.tsx   # User table with role select and delete
-│   │   ├── auth/
-│   │   │   ├── change-password-dialog.tsx # User change password dialog
-│   │   │   ├── login-form.tsx             # Sign in form
-│   │   │   ├── register-form.tsx          # Registration form
-│   │   │   └── user-menu.tsx              # User dropdown (theme, admin link, logout)
-│   │   ├── expenses/
-│   │   │   ├── charts/                    # Spending by category and monthly trend charts
-│   │   │   ├── filters/                   # Date range, period, and category filter controls
-│   │   │   ├── table/
-│   │   │   │   ├── expense-delete-dialog.tsx   # Delete confirmation dialog
-│   │   │   │   ├── expense-list-skeleton.tsx   # Loading skeleton
-│   │   │   │   ├── expense-table.tsx           # Sortable expense table
-│   │   │   │   └── expense-table-pagination.tsx # Pagination controls
-│   │   │   ├── chart-card.tsx             # Reusable chart wrapper card
-│   │   │   ├── expense-dialog.tsx         # Add/edit expense modal
-│   │   │   ├── expense-form.tsx           # Expense form with validation
-│   │   │   └── summary-card.tsx           # Spending summary (total, avg, count)
-│   │   └── ui/                            # shadcn/ui primitives
+│   │   ├── admin/         # User management table, activity log, dialogs
+│   │   ├── auth/          # Login form, register form, user menu, change password
+│   │   ├── expenses/      # Charts, filters, expense table, summary card
+│   │   └── ui/            # shadcn/ui primitives
 │   ├── hooks/
-│   │   ├── use-auth.ts                    # Authentication state and change-password mutation
-│   │   ├── use-admin.ts                   # Admin queries and mutations (users, activities, password reset)
-│   │   ├── use-expenses.ts                # Expense CRUD mutations and queries
-│   │   ├── use-expense-filter.ts          # Filter state (date range, categories, shortcuts)
-│   │   ├── use-expense-table.ts           # Table state (sorting, pagination)
-│   │   └── use-trends-chart-data.ts       # Monthly trend data derived from expenses
+│   │   ├── use-auth.ts          # Authentication state and mutations
+│   │   ├── use-admin.ts         # Admin queries (users, activities, password reset)
+│   │   ├── use-expenses.ts      # Expense CRUD queries and mutations
+│   │   ├── use-expense-filter.ts # Filter state (date range, categories, shortcuts)
+│   │   ├── use-expense-table.ts  # Table state (sorting, pagination)
+│   │   └── use-trends-chart-data.ts # Monthly trend data derived from expenses
 │   ├── lib/
-│   │   ├── auth.ts                        # JWT sign/verify helpers, cookie header builders
-│   │   ├── activity.ts                    # logActivity() helper for user_activities table
-│   │   ├── category-colors.ts             # Badge colour mapping per expense category
-│   │   ├── chart-utils.ts                 # Shared chart formatting utilities
-│   │   ├── db.ts                          # Drizzle ORM database connection
-│   │   ├── schema.ts                      # Database table definitions (users, expenses, user_activities)
-│   │   ├── validations.ts                 # Zod schemas for all forms and API inputs
-│   │   └── utils.ts                       # Shared utility functions (cn)
+│   │   ├── schema.ts       # Database table definitions — single source of truth
+│   │   ├── auth.ts         # JWT sign/verify helpers, cookie builders
+│   │   ├── validations.ts  # Zod schemas shared across client and server
+│   │   ├── activity.ts     # logActivity() helper for audit log
+│   │   ├── db.ts           # Drizzle ORM connection
+│   │   └── category-colors.ts # Badge colour mapping per category
 │   └── providers/
-│       └── query-provider.tsx             # TanStack Query client provider
-├── .env.local                             # Environment variables (not committed)
-└── WORKLOAD.md                            # Workload allocation statement
+│       └── query-provider.tsx # TanStack Query client provider
+└── WORKLOAD.md            # Workload allocation statement
 ```
 
 ## Database Entities
