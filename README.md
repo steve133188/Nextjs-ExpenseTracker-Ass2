@@ -6,6 +6,33 @@
 
 Most people have no clear picture of where their money goes. This app solves that by letting individuals record every expense, assign it to a category, and immediately see breakdowns and trends through interactive charts. Filters by date range and category make it easy to answer questions like "how much did I spend on food this month?" Administrators can manage all user accounts and review a full audit log of every action taken in the system.
 
+## Features
+
+The app performs full CRUD operations on three entities as required:
+
+| Entity | Operations |
+|--------|-----------|
+| **Users** (`users`) | Register, login, logout, change password; admin can create, update role, reset password, delete |
+| **Expenses** (`expenses`) | Create, read (with live search, date/category filters, sorting, pagination), update, delete |
+| **Activity Log** (`user_activities`) | Automatically created on every user action; admin can read with server-side pagination |
+
+Additional features:
+- Role-based access: regular users see only their own expenses; admin has a dedicated `/admin` panel
+- Interactive charts: spending by category (donut) and monthly trend (bar)
+- Responsive layout across desktop and mobile
+- Dark/light theme toggle
+
+## Security
+
+| Measure | Implementation |
+|---------|---------------|
+| Password hashing | bcryptjs with salt rounds — passwords are never stored in plain text |
+| JWT authentication | Signed with a secret key (HS256 via `jose`); stored in an HttpOnly cookie inaccessible to JavaScript, preventing XSS-based token theft |
+| Server-side auth enforcement | Next.js Edge Middleware verifies the JWT on every request and rejects or redirects unauthenticated/unauthorised access before any page or API handler runs |
+| Role-based access control | Middleware checks the `role` claim in the JWT; `/admin` page and all `/api/admin/*` routes reject non-admin requests with 403 |
+| Input validation | Zod schemas validate all inputs on both client and server; API routes reject malformed requests before touching the database |
+| No sensitive data in repo | `.env.local` (JWT secret) is git-ignored; no credentials are hardcoded |
+
 ## Tech Stack
 
 | Layer | Technology |
