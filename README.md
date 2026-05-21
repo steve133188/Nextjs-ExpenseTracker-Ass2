@@ -8,30 +8,26 @@ Most people have no clear picture of where their money goes. This app solves tha
 
 ## Features
 
-The app performs full CRUD operations on three entities as required:
+Full CRUD on three entities:
 
 | Entity | Operations |
 |--------|-----------|
-| **Users** (`users`) | Register, login, logout, change password; admin can create, update role, reset password, delete |
-| **Expenses** (`expenses`) | Create, read (with live search, date/category filters, sorting, pagination), update, delete |
-| **Activity Log** (`user_activities`) | Automatically created on every user action; admin can read with server-side pagination |
+| **Users** | Register, login, logout, change password; admin can create, update role, reset password, delete |
+| **Expenses** | Create, read (live search, date/category filters, sorting, pagination), update, delete |
+| **Activity Log** | Auto-created on every user action; admin reads with server-side pagination |
 
-Additional features:
-- Role-based access: regular users see only their own expenses; admin has a dedicated `/admin` panel
-- Interactive charts: spending by category (donut) and monthly trend (bar)
-- Responsive layout across desktop and mobile
-- Dark/light theme toggle
+Additional: role-based access, spending charts (donut + monthly trend), responsive layout, dark/light theme.
 
 ## Security
 
 | Measure | Implementation |
 |---------|---------------|
-| Password hashing | bcryptjs with salt rounds — passwords are never stored in plain text |
-| JWT authentication | Signed with a secret key (HS256 via `jose`); stored in an HttpOnly cookie inaccessible to JavaScript, preventing XSS-based token theft |
-| Server-side auth enforcement | Next.js Edge Middleware verifies the JWT on every request and rejects or redirects unauthenticated/unauthorised access before any page or API handler runs |
-| Role-based access control | Middleware checks the `role` claim in the JWT; `/admin` page and all `/api/admin/*` routes reject non-admin requests with 403 |
-| Input validation | Zod schemas validate all inputs on both client and server; API routes reject malformed requests before touching the database |
-| No sensitive data in repo | `.env.local` (JWT secret) is git-ignored; no credentials are hardcoded |
+| Password hashing | bcryptjs — passwords never stored in plain text |
+| JWT authentication | HS256 via `jose`; stored in HttpOnly cookie, inaccessible to JavaScript (XSS-safe) |
+| Server-side enforcement | Edge Middleware verifies JWT on every request before any page or API handler runs |
+| Role-based access control | `/admin` page and `/api/admin/*` routes reject non-admin requests with 403 |
+| Input validation | Zod schemas on both client and server — API rejects malformed requests before touching the DB |
+| No sensitive data in repo | `.env.local` is git-ignored; no hardcoded credentials |
 
 ## Tech Stack
 
@@ -40,7 +36,7 @@ Additional features:
 | Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
 | Database | SQLite via Drizzle ORM |
-| Auth | JWT (jose) in HttpOnly cookie, bcryptjs for password hashing |
+| Auth | JWT (jose) in HttpOnly cookie, bcryptjs |
 | UI | shadcn/ui, Tailwind CSS v4 |
 | Data fetching | TanStack Query v5 |
 | Forms | react-hook-form + Zod |
@@ -51,40 +47,29 @@ Additional features:
 | Decision | Rationale |
 |----------|-----------|
 | TanStack Query over `useState` + `useEffect` | Built-in caching, background refetch, deduplication, and loading/error states — avoids race conditions from manual fetch logic |
-| JWT in HttpOnly cookie over `localStorage` | Cookie is inaccessible to JavaScript, eliminating XSS token theft; token is verified in Edge Middleware before any component renders |
-| Next.js Middleware for auth | Centralises auth and role checks in one place; injects user context as request headers so API routes never re-verify the token |
-| Drizzle ORM over raw SQL | Type-safe queries catch schema mismatches at compile time; `schema.ts` is the single source of truth for DB structure and TypeScript types |
-| Shared Zod schemas | Same validation rules run on both the client form and the server API — no duplication, no divergence |
-| SQLite | No external DB server required; appropriate for single-user deployment; Drizzle Kit handles migrations |
+| JWT in HttpOnly cookie over `localStorage` | Cookie is inaccessible to JavaScript, eliminating XSS token theft; verified in Edge Middleware before any component renders |
+| Next.js Middleware for auth | Centralises auth and role checks; injects user context as request headers so API routes never re-verify the token |
+| Drizzle ORM over raw SQL | Type-safe queries catch schema mismatches at compile time; `schema.ts` is the single source of truth for DB and TypeScript types |
+| Shared Zod schemas | Same validation rules on client form and server API — no duplication, no divergence |
+| SQLite | No external DB server required; Drizzle Kit handles migrations |
 
 ## How to Run
 
 **Prerequisites:** Node.js 18+
 
 ```bash
-# 1. Install dependencies
-npm install
-
-# 2. Create environment file
-echo "JWT_SECRET=replace-with-a-32-char-random-secret" > .env.local
-
-# 3. Push schema to SQLite
-npm run db:push
-
-# 4. Start the dev server
-npm run dev
-
-# 5. (Optional) Seed the database with demo data
-npm run db:seed
+npm install                                                  # 1. Install dependencies
+echo "JWT_SECRET=replace-with-a-32-char-random-secret" > .env.local  # 2. Create env file
+npm run db:push                                              # 3. Push schema to SQLite
+npm run dev                                                  # 4. Start dev server
+npm run db:seed                                              # 5. (Optional) Seed demo data
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
 Demo accounts (after seeding):
-- `root@test.com` / `admin1234` — admin role
+- `root@test.com` / `admin1234` — admin
 - `demo1@test.com` / `demo1234` — regular user
-
-### Scripts
 
 | Command | Purpose |
 |---------|---------|
@@ -135,82 +120,23 @@ Demo accounts (after seeding):
 └── WORKLOAD.md            # Workload allocation statement
 ```
 
-## Database Entities
-
-| Entity | Description |
-|--------|-------------|
-| `users` | Registered accounts with hashed passwords and roles (`user`/`admin`) |
-| `expenses` | Individual expense records belonging to a user |
-| `user_activities` | Audit log of login, logout, register, expense CRUD, and admin actions |
-
 ## Workload Allocation
 
-This project was completed individually (group size: 1).
+This project was completed individually (group size: 1). All files written by **Steve Chak**.
 
-**Author: Steve Chak — All files**
+**Backend**
+- `src/middleware.ts` — JWT route protection, role-based access, user context injection
+- `src/lib/` — schema, auth helpers, activity logger, DB connection, Zod validations
+- `src/app/api/auth/` — register, login, logout, session + password change endpoints
+- `src/app/api/expenses/` — expense list, create, read, update, delete endpoints
+- `src/app/api/admin/` — user CRUD, password reset, activity log endpoints
 
-### Backend
+**Frontend**
+- `src/app/` — root layout, main dashboard, admin panel, login page, error/404 pages
+- `src/hooks/` — auth, admin, expenses, filter, table, and chart data hooks
+- `src/components/admin/` — user management table, activity log, role/password dialogs
+- `src/components/auth/` — login form, register form, user menu, change password dialog
+- `src/components/expenses/` — charts, filters, expense table, summary card, dialogs
 
-| File | Responsibility |
-|------|---------------|
-| `src/middleware.ts` | JWT route protection, role-based access control, user context injection |
-| `src/lib/schema.ts` | Database schema definitions |
-| `src/lib/auth.ts` | JWT sign/verify and cookie helpers |
-| `src/lib/activity.ts` | Activity logging helper |
-| `src/lib/db.ts` | Database connection |
-| `src/lib/validations.ts` | Input validation schemas |
-| `src/app/api/auth/register/route.ts` | User registration |
-| `src/app/api/auth/login/route.ts` | User login |
-| `src/app/api/auth/logout/route.ts` | User logout |
-| `src/app/api/auth/me/route.ts` | Current user session and password change |
-| `src/app/api/expenses/route.ts` | Expense list and creation |
-| `src/app/api/expenses/[id]/route.ts` | Expense read, update, delete |
-| `src/app/api/admin/users/route.ts` | Admin user list and creation |
-| `src/app/api/admin/users/[id]/route.ts` | Admin role change and user deletion |
-| `src/app/api/admin/users/[id]/reset-password/route.ts` | Admin password reset (auto-generated) |
-| `src/app/api/admin/activities/route.ts` | Admin activity log with server-side pagination |
-
-### Frontend
-
-| File | Responsibility |
-|------|---------------|
-| `src/app/layout.tsx` | Root layout |
-| `src/app/page.tsx` | Main dashboard with live search |
-| `src/app/admin/page.tsx` | Dedicated admin panel page (role-protected) |
-| `src/app/login/page.tsx` | Authentication page |
-| `src/app/error.tsx` | Error boundary |
-| `src/app/not-found.tsx` | 404 page |
-| `src/hooks/use-auth.ts` | Authentication state and change-password mutation |
-| `src/hooks/use-admin.ts` | Admin queries and mutations |
-| `src/hooks/use-expenses.ts` | Expense data hooks |
-| `src/hooks/use-expense-filter.ts` | Filter state hook |
-| `src/hooks/use-expense-table.ts` | Table state hook |
-| `src/hooks/use-trends-chart-data.ts` | Chart data hook |
-| `src/components/admin/user-management-card.tsx` | User table with role select and delete |
-| `src/components/admin/activity-log-card.tsx` | Activity log table with pagination |
-| `src/components/admin/create-user-dialog.tsx` | Admin create user dialog |
-| `src/components/admin/reset-password-dialog.tsx` | Admin password reset dialog |
-| `src/components/admin/role-confirm-dialog.tsx` | Role change confirmation dialog |
-| `src/components/auth/login-form.tsx` | Sign in form |
-| `src/components/auth/register-form.tsx` | Registration form |
-| `src/components/auth/user-menu.tsx` | User dropdown menu |
-| `src/components/auth/change-password-dialog.tsx` | User change password dialog |
-| `src/components/expenses/chart-card.tsx` | Reusable chart wrapper card |
-| `src/components/expenses/expense-dialog.tsx` | Add/edit expense modal |
-| `src/components/expenses/expense-form.tsx` | Expense form with validation |
-| `src/components/expenses/summary-card.tsx` | Spending summary card |
-| `src/components/expenses/charts/` | Spending by category and monthly trend charts |
-| `src/components/expenses/filters/` | Date range, period, and category filter controls |
-| `src/components/expenses/table/expense-table.tsx` | Sortable expense table |
-| `src/components/expenses/table/expense-delete-dialog.tsx` | Delete confirmation dialog |
-| `src/components/expenses/table/expense-list-skeleton.tsx` | Loading skeleton |
-| `src/components/expenses/table/expense-table-pagination.tsx` | Pagination controls |
-| `src/components/ui/` | shadcn/ui component library |
-
-### Scripts and Config
-
-| File | Responsibility |
-|------|---------------|
-| `scripts/seed-db.js` | Database seeding |
-| `scripts/export-db.js` | Database export |
-| `drizzle.config.ts` | Drizzle ORM configuration |
+**Scripts and Config**
+- `scripts/seed-db.js`, `scripts/export-db.js`, `drizzle.config.ts`
