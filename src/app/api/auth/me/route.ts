@@ -35,6 +35,9 @@ export async function PATCH(request: Request) {
     const valid = await bcrypt.compare(currentPassword, user.passwordHash)
     if (!valid) return NextResponse.json({ error: "Current password is incorrect" }, { status: 400 })
 
+    const same = await bcrypt.compare(newPassword, user.passwordHash)
+    if (same) return NextResponse.json({ error: "New password must be different from current password" }, { status: 400 })
+
     const passwordHash = await bcrypt.hash(newPassword, 10)
     db.update(users).set({ passwordHash }).where(eq(users.id, userId)).run()
     logActivity(userId, "change_password", `${user.username} changed their password`)

@@ -36,6 +36,8 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
       onError: (err: Error) => {
         if (err.message === "Current password is incorrect") {
           setError("currentPassword", { message: err.message })
+        } else if (err.message === "New password must be different from current password") {
+          setError("newPassword", { message: err.message })
         }
       },
     })
