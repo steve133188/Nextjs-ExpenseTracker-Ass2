@@ -29,20 +29,15 @@ async function fetchExpenses(filters: ExpenseFilters): Promise<Expense[]> {
 }
 
 async function throwWithMessage(res: Response, fallback: string): Promise<never> {
-  try {
-    const body = await res.json()
-    const msg = body?.error?.formErrors?.[0] ?? body?.error ?? fallback
-    throw new Error(typeof msg === "string" ? msg : fallback)
-  } catch (e) {
-    if (e instanceof Error && e.message !== fallback) throw e
-    throw new Error(fallback)
-  }
+  const body = await res.json().catch(() => null)
+  throw new Error(typeof body?.error === "string" ? body.error : fallback)
 }
 
 export function useExpenses(filters: ExpenseFilters = {}) {
   return useQuery({
     queryKey: [...QUERY_KEY, filters],
     queryFn: () => fetchExpenses(filters),
+    // skip the request until a date range is set — the API requires both bounds
     enabled: !!(filters.from && filters.to),
   })
 }

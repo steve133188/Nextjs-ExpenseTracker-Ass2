@@ -23,10 +23,17 @@ export interface PaginatedActivities {
   total: number
 }
 
+async function fetchJson<T>(url: string): Promise<T> {
+  const r = await fetch(url)
+  const json = await r.json()
+  if (!r.ok) throw new Error(json.error ?? "Request failed")
+  return json as T
+}
+
 export function useAdminUsers() {
   return useQuery<AdminUser[]>({
     queryKey: ["admin", "users"],
-    queryFn:  () => fetch("/api/admin/users").then((r) => r.json()),
+    queryFn:  () => fetchJson<AdminUser[]>("/api/admin/users"),
   })
 }
 
@@ -34,7 +41,7 @@ export function useAdminActivities(page = 0, pageSize = 20) {
   return useQuery<PaginatedActivities>({
     queryKey: ["admin", "activities", page],
     queryFn:  () =>
-      fetch(`/api/admin/activities?limit=${pageSize}&offset=${page * pageSize}`).then((r) => r.json()),
+      fetchJson<PaginatedActivities>(`/api/admin/activities?limit=${pageSize}&offset=${page * pageSize}`),
   })
 }
 
