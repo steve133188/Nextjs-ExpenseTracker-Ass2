@@ -21,7 +21,7 @@ interface Props {
 export function ChangePasswordDialog({ open, onOpenChange }: Props) {
   const changePassword = useChangePassword()
 
-  const { register, handleSubmit, reset, formState: { errors, isValid } } =
+  const { register, handleSubmit, reset, setError, formState: { errors, isValid } } =
     useForm<ChangePasswordFormData>({
       resolver: zodResolver(changePasswordSchema),
       mode: "onChange",
@@ -33,6 +33,11 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
   function onSubmit({ confirmPassword: _, ...data }: ChangePasswordFormData) {
     changePassword.mutate(data, {
       onSuccess: () => onOpenChange(false),
+      onError: (err: Error) => {
+        if (err.message === "Current password is incorrect") {
+          setError("currentPassword", { message: err.message })
+        }
+      },
     })
   }
 
