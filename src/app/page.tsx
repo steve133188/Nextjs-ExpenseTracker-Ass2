@@ -57,7 +57,7 @@ export default function Home() {
 
   const allExpenses   = query.data ?? []
   const isSearching   = searchQuery.trim().length > 0
-  const resultCount   = isSearching ? `${expenses.length} of ${allExpenses.length}` : allExpenses.length
+  const searchCount   = isSearching ? `${expenses.length} of ${allExpenses.length}` : null
 
   return (
     <div className="min-h-screen bg-background">
@@ -120,22 +120,22 @@ export default function Home() {
         </div>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between py-3 px-4 gap-4">
+          <CardHeader className="flex flex-wrap items-center gap-2 py-3 px-4">
             <CardTitle className="text-base flex items-center gap-2 shrink-0">
               {isLoading ? <Skeleton className="h-5 w-24" /> : (
                 <>
                   Expenses
-                  <span className="text-sm font-normal text-muted-foreground">{resultCount}</span>
+                  {searchCount && <span className="text-sm font-normal text-muted-foreground">{searchCount}</span>}
                   {isRefetching && <Spinner className="size-3.5 text-muted-foreground" />}
                 </>
               )}
             </CardTitle>
 
             {/* Live search — filters already-fetched expenses without a server round trip */}
-            <div className="relative w-full max-w-xs">
+            <div className="relative w-full sm:max-w-xs sm:ml-auto">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
               <Input
-                className="pl-8 pr-8 h-8 text-sm"
+                className="pl-8 pr-8 h-9 text-sm"
                 placeholder="Search expenses…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
