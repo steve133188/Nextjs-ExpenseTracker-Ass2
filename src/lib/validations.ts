@@ -59,6 +59,11 @@ export const changePasswordSchema = z.object({
   path:    ["confirmPassword"],
 })
 
+export const changeUsernameSchema = z.object({
+  username: z.string().trim().min(3, "Min 3 characters").max(30, "Max 30 characters"),
+})
+
+export type ChangeUsernameFormData   = z.infer<typeof changeUsernameSchema>
 export type LoginFormData            = z.infer<typeof loginSchema>
 export type RegisterFormData         = z.infer<typeof registerSchema>
 export type AdminCreateUserFormData  = z.infer<typeof adminCreateUserSchema>

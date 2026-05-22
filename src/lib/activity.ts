@@ -12,6 +12,7 @@ export type ActivityAction =
   | "change_role"
   | "delete_user"
   | "change_password"
+  | "change_username"
   | "reset_password"
 
 export function logActivity(userId: string, action: ActivityAction, detail = ""): void {

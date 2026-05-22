@@ -3,9 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
-import { Sun, Moon, KeyRound, LogOut, ChevronDown, LayoutDashboard } from "lucide-react"
+import { Sun, Moon, KeyRound, LogOut, ChevronDown, LayoutDashboard, UserPen } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { ChangePasswordDialog } from "@/components/auth/change-password-dialog"
+import { ChangeUsernameDialog } from "@/components/auth/change-username-dialog"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -16,6 +17,7 @@ export function UserMenu() {
   const { theme, setTheme } = useTheme()
   const { user, logout }    = useAuth()
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const [usernameOpen, setUsernameOpen] = useState(false)
 
   if (!user) return null
 
@@ -35,7 +37,7 @@ export function UserMenu() {
           <DropdownMenuSeparator />
           {user.role === "admin" && (
             <DropdownMenuItem asChild>
-              <Link href="/admin" className="flex items-center gap-2">
+              <Link href="/admin/users" className="flex items-center gap-2">
                 <LayoutDashboard className="size-4" />
                 Admin Panel
               </Link>
@@ -46,6 +48,10 @@ export function UserMenu() {
               ? <><Sun className="size-4" /> Light mode</>
               : <><Moon className="size-4" /> Dark mode</>
             }
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setUsernameOpen(true)}>
+            <UserPen className="size-4" />
+            Change username
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setPasswordOpen(true)}>
             <KeyRound className="size-4" />
@@ -59,6 +65,11 @@ export function UserMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
 
+      <ChangeUsernameDialog
+        open={usernameOpen}
+        onOpenChange={setUsernameOpen}
+        currentUsername={user.username}
+      />
       <ChangePasswordDialog open={passwordOpen} onOpenChange={setPasswordOpen} />
     </>
   )

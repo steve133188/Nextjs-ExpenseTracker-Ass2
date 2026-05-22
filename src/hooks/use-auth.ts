@@ -61,3 +61,25 @@ export function useChangePassword() {
     onError:   (err: Error) => toast.error(err.message),
   })
 }
+
+export function useChangeUsername() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (username: string) =>
+      fetch("/api/auth/me", {
+        method:  "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ username }),
+      }).then(async (r) => {
+        const json = await r.json()
+        if (!r.ok) throw new Error(json.error ?? "Failed to update username")
+        return json
+      }),
+    onSuccess: () => {
+      // Refresh auth so header shows new username
+      queryClient.invalidateQueries({ queryKey: ["auth"] })
+      toast.success("Username updated")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}

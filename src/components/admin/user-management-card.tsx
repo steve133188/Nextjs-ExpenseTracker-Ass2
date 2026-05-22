@@ -1,28 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import Link from "next/link"
 import { format } from "date-fns"
-import { Trash2 } from "lucide-react"
-import { useAdminUsers, useChangeRole, useDeleteUser } from "@/hooks/use-admin"
+import { ChevronRight } from "lucide-react"
+import { useAdminUsers } from "@/hooks/use-admin"
 import { CreateUserDialog } from "@/components/admin/create-user-dialog"
-import { ResetPasswordDialog } from "@/components/admin/reset-password-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select"
-import { RoleConfirmDialog } from "@/components/admin/role-confirm-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export function UserManagementCard({ currentUserId }: { currentUserId: string }) {
   const usersQuery = useAdminUsers()
-  const changeRole = useChangeRole()
-  const deleteUser = useDeleteUser()
-  const [roleConfirm, setRoleConfirm] = useState<{ id: string; username: string; newRole: string } | null>(null)
 
   return (
     <Card>
@@ -34,20 +23,13 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
       </CardHeader>
       <CardContent className="pt-0 px-0">
         <Table>
-          <colgroup>
-            <col className="w-[13%]" />
-            <col className="w-[28%]" />
-            <col className="w-[12%]" />
-            <col className="w-[13%]" />
-            <col className="w-[34%]" />
-          </colgroup>
           <TableHeader>
             <TableRow>
               <TableHead className="pl-4">Username</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead className="hidden sm:table-cell">Email</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead className="text-right pr-4">Actions</TableHead>
+              <TableHead className="hidden sm:table-cell">Joined</TableHead>
+              <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -55,7 +37,7 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
               ? Array.from({ length: 3 }).map((_, i) => (
                   <TableRow key={i}>
                     {Array.from({ length: 5 }).map((_, j) => (
-                      <TableCell key={j} className={j === 0 ? "pl-4" : j === 4 ? "pr-4" : ""}>
+                      <TableCell key={j} className={j === 0 ? "pl-4" : ""}>
                         <Skeleton className="h-4 w-full" />
                       </TableCell>
                     ))}
@@ -71,52 +53,28 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
                   </TableRow>
                 )
               : (usersQuery.data ?? []).map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium pl-4">{user.username}</TableCell>
-                    <TableCell className="text-muted-foreground text-sm">{user.email}</TableCell>
-                    <TableCell>
-                      {user.id === currentUserId ? (
-                        <Badge variant={user.role === "admin" ? "default" : "secondary"}>
-                          {user.role}
-                        </Badge>
-                      ) : (
-                        <Select
-                          value={user.role}
-                          disabled={changeRole.isPending}
-                          onValueChange={(newRole) =>
-                            setRoleConfirm({ id: user.id, username: user.username, newRole })
-                          }
-                        >
-                          <SelectTrigger className="h-7 w-24 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="user">user</SelectItem>
-                            <SelectItem value="admin">admin</SelectItem>
-                          </SelectContent>
-                        </Select>
+                  <TableRow
+                    key={user.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => window.location.href = `/admin/users/${user.id}`}
+                  >
+                    <TableCell className="font-medium pl-4">
+                      {user.username}
+                      {user.id === currentUserId && (
+                        <span className="ml-2 text-xs text-muted-foreground italic">you</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">{user.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={user.role === "admin" ? "default" : "secondary"} className="text-xs">
+                        {user.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
                       {format(new Date(user.createdAt), "dd MMM yyyy")}
                     </TableCell>
-                    <TableCell className="text-right pr-4">
-                      {user.id === currentUserId ? (
-                        <span className="text-xs text-muted-foreground italic">you</span>
-                      ) : (
-                        <div className="flex items-center justify-end gap-1">
-                          <ResetPasswordDialog userId={user.id} username={user.username} />
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-destructive hover:text-destructive"
-                            disabled={deleteUser.isPending}
-                            onClick={() => deleteUser.mutate(user.id)}
-                          >
-                            <Trash2 className="size-3.5" />
-                          </Button>
-                        </div>
-                      )}
+                    <TableCell className="pr-3">
+                      <ChevronRight className="size-4 text-muted-foreground ml-auto" />
                     </TableCell>
                   </TableRow>
                 ))
@@ -124,12 +82,6 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
           </TableBody>
         </Table>
       </CardContent>
-
-      <RoleConfirmDialog
-        target={roleConfirm}
-        onConfirm={(id, role) => { changeRole.mutate({ id, role }); setRoleConfirm(null) }}
-        onCancel={() => setRoleConfirm(null)}
-      />
     </Card>
   )
 }

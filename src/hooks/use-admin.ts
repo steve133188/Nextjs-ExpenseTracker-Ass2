@@ -30,10 +30,29 @@ async function fetchJson<T>(url: string): Promise<T> {
   return json as T
 }
 
+async function mutateJson<T>(url: string, method: string, body?: unknown): Promise<T> {
+  const r = await fetch(url, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : undefined,
+    body:    body ? JSON.stringify(body) : undefined,
+  })
+  const json = await r.json()
+  if (!r.ok) throw new Error(json.error ?? "Request failed")
+  return json as T
+}
+
 export function useAdminUsers() {
   return useQuery<AdminUser[]>({
     queryKey: ["admin", "users"],
     queryFn:  () => fetchJson<AdminUser[]>("/api/admin/users"),
+  })
+}
+
+export function useAdminUser(id: string) {
+  return useQuery<AdminUser>({
+    queryKey: ["admin", "users", id],
+    queryFn:  () => fetchJson<AdminUser>(`/api/admin/users/${id}`),
+    enabled:  !!id,
   })
 }
 
@@ -49,15 +68,7 @@ export function useCreateUser() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: AdminCreateUserFormData) =>
-      fetch("/api/admin/users", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(data),
-      }).then(async (r) => {
-        const json = await r.json()
-        if (!r.ok) throw new Error(json.error ?? "Failed to create user")
-        return json
-      }),
+      mutateJson("/api/admin/users", "POST", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
       queryClient.invalidateQueries({ queryKey: ["admin", "activities"] })
@@ -71,30 +82,40 @@ export function useChangeRole() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, role }: { id: string; role: string }) =>
-      fetch(`/api/admin/users/${id}`, {
-        method:  "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ role }),
-      }).then((r) => r.json()),
-    onSuccess: () => {
+      mutateJson(`/api/admin/users/${id}`, "PATCH", { role }),
+    onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
+      queryClient.invalidateQueries({ queryKey: ["admin", "users", id] })
       toast.success("Role updated")
     },
-    onError: () => toast.error("Failed to update role"),
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+export function useAdminChangeUsername() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, username }: { id: string; username: string }) =>
+      mutateJson(`/api/admin/users/${id}`, "PATCH", { username }),
+    onSuccess: (_data, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
+      queryClient.invalidateQueries({ queryKey: ["admin", "users", id] })
+      toast.success("Username updated")
+    },
+    onError: (err: Error) => toast.error(err.message),
   })
 }
 
 export function useDeleteUser() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) =>
-      fetch(`/api/admin/users/${id}`, { method: "DELETE" }).then((r) => r.json()),
+    mutationFn: (id: string) => mutateJson(`/api/admin/users/${id}`, "DELETE"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
       queryClient.invalidateQueries({ queryKey: ["admin", "activities"] })
       toast.success("User deleted")
     },
-    onError: () => toast.error("Failed to delete user"),
+    onError: (err: Error) => toast.error(err.message),
   })
 }
 
@@ -102,12 +123,7 @@ export function useResetUserPassword() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) =>
-      fetch(`/api/admin/users/${id}/reset-password`, { method: "POST" })
-        .then(async (r) => {
-          const json = await r.json()
-          if (!r.ok) throw new Error(json.error ?? "Failed to reset password")
-          return json as { password: string }
-        }),
+      mutateJson<{ password: string }>(`/api/admin/users/${id}/reset-password`, "POST"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "activities"] })
     },
