@@ -136,19 +136,23 @@ export default function UserDetailPage() {
                 {/* Role */}
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground w-24 shrink-0">Role</span>
-                  <Select
-                    value={target.role}
-                    disabled={changeRole.isPending}
-                    onValueChange={(newRole) => setRoleConfirm({ id, username: target.username, newRole })}
-                  >
-                    <SelectTrigger className="h-7 w-24 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">user</SelectItem>
-                      <SelectItem value="admin">admin</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {isSelf ? (
+                    <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
+                  ) : (
+                    <Select
+                      value={target.role}
+                      disabled={changeRole.isPending}
+                      onValueChange={(newRole) => setRoleConfirm({ id, username: target.username, newRole })}
+                    >
+                      <SelectTrigger className="h-7 w-24 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">user</SelectItem>
+                        <SelectItem value="admin">admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
 
                 <Separator />
