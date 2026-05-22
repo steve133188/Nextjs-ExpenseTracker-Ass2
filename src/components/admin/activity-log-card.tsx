@@ -42,12 +42,6 @@ export function ActivityLogCard() {
       </CardHeader>
       <CardContent className="pt-0 px-0">
         <Table>
-          <colgroup>
-            <col className="w-[15%]" />
-            <col className="w-[20%]" />
-            <col className="w-[45%]" />
-            <col className="w-[20%]" />
-          </colgroup>
           <TableHeader>
             <TableRow>
               <TableHead className="pl-4">User</TableHead>
@@ -60,11 +54,10 @@ export function ActivityLogCard() {
             {activitiesQuery.isLoading
               ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
                   <TableRow key={i}>
-                    {Array.from({ length: 4 }).map((_, j) => (
-                      <TableCell key={j} className={j === 0 ? "pl-4" : j === 3 ? "pr-4" : ""}>
-                        <Skeleton className="h-4 w-full" />
-                      </TableCell>
-                    ))}
+                    <TableCell className="pl-4"><Skeleton className="h-4 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-full" /></TableCell>
+                    <TableCell className="pr-4"><Skeleton className="h-4 w-full" /></TableCell>
                   </TableRow>
                 ))
               : activitiesQuery.isError
@@ -92,11 +85,12 @@ export function ActivityLogCard() {
                         {activity.action}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="text-sm text-muted-foreground whitespace-normal break-words min-w-[100px]">
                       {activity.detail || null}
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground pr-4 whitespace-nowrap">
-                      {format(new Date(activity.createdAt), "dd MMM yyyy HH:mm")}
+                      <span className="sm:hidden">{format(new Date(activity.createdAt), "HH:mm")}</span>
+                      <span className="hidden sm:inline">{format(new Date(activity.createdAt), "dd MMM yyyy HH:mm")}</span>
                     </TableCell>
                   </TableRow>
                 ))

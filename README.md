@@ -12,11 +12,46 @@ Full CRUD on three entities:
 
 | Entity | Operations |
 |--------|-----------|
-| **Users** | Register, login, logout, change password; admin can create, update role, reset password, delete |
+| **Users** | Register, login, logout, change username, change password; admin can create, change username, update role, reset password, delete |
 | **Expenses** | Create, read (live search, date/category filters, sorting, pagination), update, delete |
 | **Activity Log** | Auto-created on every user action; admin reads with server-side pagination |
 
 Additional: role-based access, spending charts (donut + monthly trend), responsive layout, dark/light theme.
+
+## API Endpoints
+
+### Users (`/api/auth/*`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register` | Create account — hashes password with bcrypt, issues JWT cookie |
+| `POST` | `/api/auth/login` | Authenticate — verifies bcrypt hash, issues JWT cookie |
+| `POST` | `/api/auth/logout` | Clear JWT cookie, log activity |
+| `GET` | `/api/auth/me` | Read own profile from JWT payload |
+| `PATCH` | `/api/auth/me` | Update own username (re-issues JWT) or change password (bcrypt verify + hash) |
+
+### Expenses (`/api/expenses/*`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/expenses` | List own expenses — supports `category`, `from`, `to` query filters via Drizzle `where` clauses |
+| `POST` | `/api/expenses` | Create expense — validates with Zod, associates with authenticated user |
+| `GET` | `/api/expenses/[id]` | Read single expense — enforces ownership (returns 404 if not owner) |
+| `PUT` | `/api/expenses/[id]` | Update expense — validates full body, enforces ownership |
+| `DELETE` | `/api/expenses/[id]` | Delete expense — enforces ownership, logs activity |
+
+### Admin — Users (`/api/admin/users/*`) — requires admin role
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/users` | List all users (excludes password hashes) |
+| `POST` | `/api/admin/users` | Create user — hashes password, assigns role |
+| `GET` | `/api/admin/users/[id]` | Read single user |
+| `PATCH` | `/api/admin/users/[id]` | Update username or role — discriminated by request body shape |
+| `DELETE` | `/api/admin/users/[id]` | Delete user and all their expenses (cascaded in query) |
+| `POST` | `/api/admin/users/[id]/reset-password` | Generate random password via `crypto.randomBytes`, hash with bcrypt, return plaintext once |
+
+### Admin — Activity Log (`/api/admin/activities/*`) — requires admin role
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/activities` | Paginated log — accepts `page` and `pageSize` query params, returns rows + total count |
 
 ## Security
 
@@ -92,13 +127,13 @@ Demo accounts (after seeding):
 │   │   │   ├── auth/      # register, login, logout, me (+ change password) endpoints
 │   │   │   ├── expenses/  # CRUD endpoints for expense items
 │   │   │   └── admin/     # Admin-only: user CRUD, password reset, activity log
-│   │   ├── admin/         # /admin page — dedicated admin panel (role-protected)
+│   │   ├── admin/         # Admin panel (role-protected): users list, user detail, activity log sub-routes
 │   │   ├── login/         # /login page — sign in and register tabs
 │   │   ├── page.tsx       # Main dashboard (expenses, charts, filters)
 │   │   └── layout.tsx     # Root layout (fonts, providers)
 │   ├── components/
 │   │   ├── admin/         # User management table, activity log, dialogs
-│   │   ├── auth/          # Login form, register form, user menu, change password
+│   │   ├── auth/          # Login/register forms, user menu, change username/password dialogs
 │   │   ├── expenses/      # Charts, filters, expense table, summary card
 │   │   └── ui/            # shadcn/ui primitives
 │   ├── hooks/
@@ -107,6 +142,7 @@ Demo accounts (after seeding):
 │   │   ├── use-expenses.ts          # Expense CRUD queries and mutations
 │   │   ├── use-expense-filter.ts    # Filter state (date range, categories, shortcuts)
 │   │   ├── use-expense-table.ts     # Table state (sorting, pagination)
+│   │   ├── use-inline-edit.ts       # Reusable inline edit state (editing, value, start, cancel)
 │   │   └── use-trends-chart-data.ts # Monthly trend data derived from expenses
 │   ├── lib/
 │   │   ├── schema.ts          # Database table definitions — single source of truth
@@ -122,21 +158,54 @@ Demo accounts (after seeding):
 
 ## Workload Allocation
 
-This project was completed individually (group size: 1). All files written by **Steve Chak**.
+| | |
+|---|---|
+| **Group size** | 1 (individual submission) |
+| **Student** | Chi Yui Steve Chak |
+| **Student ID** | 25952906 |
 
-**Backend**
-- `src/middleware.ts` — JWT route protection, role-based access, user context injection
-- `src/lib/` — schema, auth helpers, activity logger, DB connection, Zod validations
-- `src/app/api/auth/` — register, login, logout, session + password change endpoints
-- `src/app/api/expenses/` — expense list, create, read, update, delete endpoints
-- `src/app/api/admin/` — user CRUD, password reset, activity log endpoints
+All code written solely by Chi Yui Steve Chak.
 
-**Frontend**
-- `src/app/` — root layout, main dashboard, admin panel, login page, error/404 pages
-- `src/hooks/` — auth, admin, expenses, filter, table, and chart data hooks
-- `src/components/admin/` — user management table, activity log, role/password dialogs
-- `src/components/auth/` — login form, register form, user menu, change password dialog
-- `src/components/expenses/` — charts, filters, expense table, summary card, dialogs
+### Backend API Routes
 
-**Scripts and Config**
-- `scripts/seed-db.js`, `scripts/export-db.js`, `drizzle.config.ts`
+| Route | Methods | Responsibility |
+|-------|---------|----------------|
+| `/api/auth/register` | `POST` | Create account, hash password, issue JWT |
+| `/api/auth/login` | `POST` | Verify credentials, issue JWT cookie |
+| `/api/auth/logout` | `POST` | Clear JWT cookie |
+| `/api/auth/me` | `GET` `PATCH` | Read profile; update username (re-issues JWT) or password |
+| `/api/expenses` | `GET` `POST` | List own expenses with filters; create expense |
+| `/api/expenses/[id]` | `GET` `PUT` `DELETE` | Read, update, delete own expense (ownership enforced) |
+| `/api/admin/users` | `GET` `POST` | List all users; admin create user |
+| `/api/admin/users/[id]` | `GET` `PATCH` `DELETE` | Read, update username/role, delete user |
+| `/api/admin/users/[id]/reset-password` | `POST` | Generate random password, hash, return plaintext once |
+| `/api/admin/activities` | `GET` | Paginated activity log |
+
+Supporting backend files:
+- `src/middleware.ts` — JWT verification, role-based access control, user context injection into headers
+- `src/lib/schema.ts` — Drizzle ORM schema (single source of truth for DB + TypeScript types)
+- `src/lib/auth.ts` — JWT sign/verify helpers, cookie builder
+- `src/lib/validations.ts` — Zod schemas shared between client and server
+- `src/lib/activity.ts` — `logActivity()` helper called by API routes
+
+### Frontend Routes
+
+| Route | Description |
+|-------|-------------|
+| `/login` | Sign in and register tabs with inline form validation |
+| `/` | Main dashboard — expense table, live search, filters, charts, summary |
+| `/admin` | Redirects to `/admin/users` |
+| `/admin/users` | User management — list all users, create user |
+| `/admin/users/[id]` | User detail — inline edit username/role, reset password, delete |
+| `/admin/activities` | Paginated activity log with refresh |
+
+Supporting frontend files:
+- `src/hooks/` — TanStack Query hooks for auth, admin, expenses, filter state, table state, chart data
+- `src/components/admin/` — User management card, activity log card, info card, danger zone card, dialogs
+- `src/components/auth/` — Login/register forms, user menu, change username/password dialogs
+- `src/components/expenses/` — Charts, filters, expense table, summary card, expense dialogs
+
+### Scripts and Config
+- `scripts/seed-db.js` — Seed demo users and expenses
+- `scripts/export-db.js` — Export DB to JSON for submission
+- `drizzle.config.ts` — Drizzle Kit configuration

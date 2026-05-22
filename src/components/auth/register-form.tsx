@@ -2,15 +2,15 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
 import { registerSchema, type RegisterFormData } from "@/lib/validations"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting, isValid } } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: "onChange",
   })
 
   async function onSubmit(data: RegisterFormData) {
@@ -21,7 +21,7 @@ export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
     })
     if (!res.ok) {
       const body = await res.json()
-      toast.error(typeof body.error === "string" ? body.error : "Registration failed")
+      setError("root", { message: typeof body.error === "string" ? body.error : "Registration failed" })
       return
     }
     onSuccess()
@@ -44,7 +44,15 @@ export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         <Input id="reg-password" type="password" autoComplete="new-password" {...register("password")} />
         {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       </div>
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <div className="space-y-1.5">
+        <Label htmlFor="reg-confirm-password">Confirm Password</Label>
+        <Input id="reg-confirm-password" type="password" autoComplete="new-password" {...register("confirmPassword")} />
+        {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>}
+      </div>
+      {errors.root && (
+        <p className="text-sm text-destructive text-center">{errors.root.message}</p>
+      )}
+      <Button type="submit" className="w-full" disabled={isSubmitting || !isValid}>
         {isSubmitting ? "Creating account…" : "Create account"}
       </Button>
     </form>

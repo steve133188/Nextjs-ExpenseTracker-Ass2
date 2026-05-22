@@ -1,32 +1,16 @@
 "use client"
 
-import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { format } from "date-fns"
-import { ChevronLeft, Pencil, Check, X } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
-import {
-  useAdminUser, useChangeRole, useAdminChangeUsername,
-  useDeleteUser, useResetUserPassword,
-} from "@/hooks/use-admin"
-import { ResetPasswordDialog } from "@/components/admin/reset-password-dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Separator } from "@/components/ui/separator"
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select"
+import { useAdminUser, useChangeRole, useAdminChangeUsername, useDeleteUser } from "@/hooks/use-admin"
+import { useInlineEdit } from "@/hooks/use-inline-edit"
+import { UserInfoCard } from "@/components/admin/user-info-card"
+import { UserDangerZoneCard } from "@/components/admin/user-danger-zone-card"
 
 export default function UserDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const router = useRouter()
+  const { id }             = useParams<{ id: string }>()
+  const router             = useRouter()
   const { user: currentUser } = useAuth()
 
   const userQuery      = useAdminUser(id)
@@ -34,53 +18,24 @@ export default function UserDetailPage() {
   const changeUsername = useAdminChangeUsername()
   const deleteUser     = useDeleteUser()
 
-  const [editingName, setEditingName] = useState(false)
-  const [nameInput,   setNameInput]   = useState("")
-  const [editingRole, setEditingRole] = useState(false)
-  const [roleInput,   setRoleInput]   = useState("")
-  const [deleteOpen,  setDeleteOpen]  = useState(false)
+  const nameEdit = useInlineEdit()
+  const roleEdit = useInlineEdit()
 
   const target = userQuery.data
   const isSelf = currentUser?.id === id
 
-  function startEditName() {
-    setNameInput(target?.username ?? "")
-    setEditingName(true)
-  }
-
-  function cancelEditName() {
-    setEditingName(false)
-    setNameInput("")
-  }
-
   function saveName() {
-    if (!nameInput.trim() || nameInput === target?.username) { cancelEditName(); return }
-    changeUsername.mutate({ id, username: nameInput.trim() }, {
-      onSuccess: () => setEditingName(false),
-    })
-  }
-
-  function startEditRole() {
-    setRoleInput(target?.role ?? "user")
-    setEditingRole(true)
-  }
-
-  function cancelEditRole() {
-    setEditingRole(false)
-    setRoleInput("")
+    if (!nameEdit.value.trim() || nameEdit.value === target?.username) { nameEdit.cancel(); return }
+    changeUsername.mutate({ id, username: nameEdit.value.trim() }, { onSuccess: nameEdit.cancel })
   }
 
   function saveRole() {
-    if (!roleInput || roleInput === target?.role) { cancelEditRole(); return }
-    changeRole.mutate({ id, role: roleInput }, {
-      onSuccess: () => setEditingRole(false),
-    })
+    if (!roleEdit.value || roleEdit.value === target?.role) { roleEdit.cancel(); return }
+    changeRole.mutate({ id, role: roleEdit.value }, { onSuccess: roleEdit.cancel })
   }
 
   function handleDelete() {
-    deleteUser.mutate(id, {
-      onSuccess: () => router.push("/admin/users"),
-    })
+    deleteUser.mutate(id, { onSuccess: () => router.push("/admin/users") })
   }
 
   return (
@@ -96,145 +51,28 @@ export default function UserDetailPage() {
       </div>
 
       <div className="space-y-4">
-        <Card>
-          <CardHeader className="py-3 px-4">
-            <CardTitle className="text-base">User Details</CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 pb-4 space-y-4">
-            {userQuery.isLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-5 w-full" />)}
-              </div>
-            ) : userQuery.isError ? (
-              <p className="text-sm text-muted-foreground">Failed to load user.</p>
-            ) : target ? (
-              <>
-                {/* Username — inline edit */}
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-muted-foreground w-24 shrink-0">Username</span>
-                  {editingName ? (
-                    <div className="flex items-center gap-2 flex-1">
-                      <Input
-                        className="h-8 text-sm"
-                        value={nameInput}
-                        onChange={e => setNameInput(e.target.value)}
-                        onKeyDown={e => { if (e.key === "Enter") saveName(); if (e.key === "Escape") cancelEditName() }}
-                        autoFocus
-                        disabled={changeUsername.isPending}
-                      />
-                      <Button size="icon" className="size-8 shrink-0" onClick={saveName} disabled={changeUsername.isPending}>
-                        <Check className="size-3.5" />
-                      </Button>
-                      <Button size="icon" variant="ghost" className="size-8 shrink-0" onClick={cancelEditName}>
-                        <X className="size-3.5" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 flex-1 justify-between">
-                      <span className="text-sm font-medium">{target.username}</span>
-                      <Button size="icon" variant="ghost" className="size-7" onClick={startEditName}>
-                        <Pencil className="size-3.5" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-
-                <Separator />
-
-                {/* Email */}
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground w-24 shrink-0">Email</span>
-                  <span className="text-sm">{target.email}</span>
-                </div>
-
-                <Separator />
-
-                {/* Role — inline edit, blocked for self */}
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-muted-foreground w-24 shrink-0">Role</span>
-                  {isSelf ? (
-                    <div className="flex-1">
-                      <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
-                    </div>
-                  ) : editingRole ? (
-                    <div className="flex items-center gap-2 flex-1">
-                      <Select value={roleInput} onValueChange={setRoleInput} disabled={changeRole.isPending}>
-                        <SelectTrigger className="h-8 text-sm flex-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="user">user</SelectItem>
-                          <SelectItem value="admin">admin</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Button size="icon" className="size-8 shrink-0" onClick={saveRole} disabled={changeRole.isPending}>
-                        <Check className="size-3.5" />
-                      </Button>
-                      <Button size="icon" variant="ghost" className="size-8 shrink-0" onClick={cancelEditRole}>
-                        <X className="size-3.5" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 flex-1 justify-between">
-                      <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
-                      <Button size="icon" variant="ghost" className="size-7" onClick={startEditRole}>
-                        <Pencil className="size-3.5" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-
-                <Separator />
-
-                {/* Joined */}
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground w-24 shrink-0">Joined</span>
-                  <span className="text-sm">{format(new Date(target.createdAt), "dd MMM yyyy")}</span>
-                </div>
-              </>
-            ) : null}
-          </CardContent>
-        </Card>
+        <UserInfoCard
+          isLoading={userQuery.isLoading}
+          isError={userQuery.isError}
+          target={target}
+          isSelf={isSelf}
+          nameEdit={nameEdit}
+          roleEdit={roleEdit}
+          onSaveName={saveName}
+          onSaveRole={saveRole}
+          isChangingUsername={changeUsername.isPending}
+          isChangingRole={changeRole.isPending}
+        />
 
         {!isSelf && target && (
-          <Card className="border-destructive/30">
-            <CardHeader className="py-3 px-4">
-              <CardTitle className="text-base text-destructive">Danger Zone</CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4 flex flex-wrap gap-2">
-              <ResetPasswordDialog userId={id} username={target.username} />
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={deleteUser.isPending}
-                onClick={() => setDeleteOpen(true)}
-              >
-                Delete User
-              </Button>
-            </CardContent>
-          </Card>
+          <UserDangerZoneCard
+            userId={id}
+            username={target.username}
+            isDeleting={deleteUser.isPending}
+            onDelete={handleDelete}
+          />
         )}
       </div>
-
-      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete user?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete <strong>{target?.username}</strong> and all their expenses. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={handleDelete}
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

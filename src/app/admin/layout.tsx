@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Users, FileText, ChevronLeft } from "lucide-react"
+import { Users, FileText } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { UserMenu } from "@/components/auth/user-menu"
 import { Spinner } from "@/components/ui/spinner"
@@ -31,18 +31,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-background">
       <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex items-center gap-3 max-w-5xl">
-          <span className="text-xl font-semibold tracking-tight">Expense Tracker</span>
-          <span className="hidden sm:block text-xs text-muted-foreground font-mono tracking-widest uppercase pt-0.5">
+          <Link href="/" className="text-base sm:text-xl font-semibold tracking-tight whitespace-nowrap shrink-0 hover:opacity-70 transition-opacity">
+            Expense Tracker
+          </Link>
+          <span className="hidden sm:block text-xs text-muted-foreground font-mono tracking-widest uppercase pt-0.5 shrink-0">
             Admin Panel
           </span>
           <div className="ml-auto flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ChevronLeft className="size-4" />
-              My Expenses
-            </Link>
             <UserMenu />
           </div>
         </div>

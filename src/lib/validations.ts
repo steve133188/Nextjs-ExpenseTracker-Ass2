@@ -35,9 +35,13 @@ export const loginSchema = z.object({
 })
 
 export const registerSchema = z.object({
-  username: z.string().trim().min(3, "Min 3 characters").max(30),
-  email:    z.string().email("Invalid email"),
-  password: z.string().min(8, "Min 8 characters"),
+  username:        z.string().trim().min(3, "Min 3 characters").max(30),
+  email:           z.string().email("Invalid email"),
+  password:        z.string().min(8, "Min 8 characters"),
+  confirmPassword: z.string().min(1, "Required"),
+}).refine((d) => d.password === d.confirmPassword, {
+  message: "Passwords do not match",
+  path:    ["confirmPassword"],
 })
 
 export const adminCreateUserSchema = z.object({

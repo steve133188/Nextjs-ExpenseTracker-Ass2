@@ -2,15 +2,15 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
 import { loginSchema, type LoginFormData } from "@/lib/validations"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting, isValid } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: "onChange",
   })
 
   async function onSubmit(data: LoginFormData) {
@@ -21,7 +21,7 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
     })
     if (!res.ok) {
       const body = await res.json()
-      toast.error(typeof body.error === "string" ? body.error : "Login failed")
+      setError("root", { message: typeof body.error === "string" ? body.error : "Login failed" })
       return
     }
     onSuccess()
@@ -39,7 +39,10 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
         <Input id="password" type="password" autoComplete="current-password" {...register("password")} />
         {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       </div>
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      {errors.root && (
+        <p className="text-sm text-destructive text-center">{errors.root.message}</p>
+      )}
+      <Button type="submit" className="w-full" disabled={isSubmitting || !isValid}>
         {isSubmitting ? "Signing in…" : "Sign in"}
       </Button>
     </form>
