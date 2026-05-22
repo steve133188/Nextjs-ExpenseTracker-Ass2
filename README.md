@@ -121,7 +121,7 @@ Demo accounts (after seeding):
 │   ├── seed-db.js         # Populates DB with demo users and sample expenses
 │   └── export-db.js       # Exports DB contents to JSON for submission
 ├── src/
-│   ├── middleware.ts       # JWT verification, role-based access, header injection
+│   ├── proxy.ts            # JWT verification, role-based access, header injection
 │   ├── app/
 │   │   ├── api/
 │   │   │   ├── auth/      # register, login, logout, me (+ change password) endpoints
@@ -182,7 +182,7 @@ All code written solely by Chi Yui Steve Chak.
 | `/api/admin/activities` | `GET` | Paginated activity log |
 
 Supporting backend files:
-- `src/middleware.ts` — JWT verification, role-based access control, user context injection into headers
+- `src/proxy.ts` — JWT verification, role-based access control, user context injection into headers
 - `src/lib/schema.ts` — Drizzle ORM schema (single source of truth for DB + TypeScript types)
 - `src/lib/auth.ts` — JWT sign/verify helpers, cookie builder
 - `src/lib/validations.ts` — Zod schemas shared between client and server
