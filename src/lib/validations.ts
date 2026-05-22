@@ -20,10 +20,11 @@ export const expenseSchema = z.object({
     .number({ error: "Amount must be a number" })
     .positive("Amount must be greater than 0"),
   category: z.enum(EXPENSE_CATEGORIES, { error: "Required" }),
-  date: z.string().min(1, "Date is required").refine(
-    (d) => d <= new Date().toISOString().slice(0, 10),
-    "Date cannot be in the future"
-  ),
+  date: z.string().min(1, "Date is required").refine((d) => {
+    const today = new Date()
+    const localToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
+    return d <= localToday
+  }, "Date cannot be in the future"),
   description: z.string().trim().max(500).optional().or(z.literal("")),
 })
 
