@@ -2,6 +2,8 @@
 
 **GitHub:** https://github.com/steve133188/Nextjs-ExpenseTracker-Ass2
 
+**Demo:** https://utsmeet.zoom.us/clips/share/bjXWtYv3Rgyh77hoqLzSiw
+
 ## Problem Statement
 
 Most people have no clear picture of where their money goes. This app solves that by letting individuals record every expense, assign it to a category, and immediately see breakdowns and trends through interactive charts. Filters by date range and category make it easy to answer questions like "how much did I spend on food this month?" Administrators can manage all user accounts and review a full audit log of every action taken in the system.
