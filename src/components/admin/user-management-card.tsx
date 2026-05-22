@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { ChevronRight } from "lucide-react"
 import { useAdminUsers } from "@/hooks/use-admin"
@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export function UserManagementCard({ currentUserId }: { currentUserId: string }) {
+  const router     = useRouter()
   const usersQuery = useAdminUsers()
 
   return (
@@ -56,7 +57,7 @@ export function UserManagementCard({ currentUserId }: { currentUserId: string })
                   <TableRow
                     key={user.id}
                     className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => window.location.href = `/admin/users/${user.id}`}
+                    onClick={() => router.push(`/admin/users/${user.id}`)}
                   >
                     <TableCell className="font-medium pl-4">
                       {user.username}
