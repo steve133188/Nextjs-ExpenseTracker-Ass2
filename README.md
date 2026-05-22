@@ -98,8 +98,9 @@ Additional: role-based access, spending charts (donut + monthly trend), responsi
 npm install                                                  # 1. Install dependencies
 echo "JWT_SECRET=replace-with-a-32-char-random-secret" > .env.local  # 2. Create env file
 npm run db:push                                              # 3. Push schema to SQLite
-npm run dev                                                  # 4. Start dev server
-npm run db:seed                                              # 5. (Optional) Seed demo data
+npm run db:seed                                              # 4. (Optional) Seed demo data
+npm run dev                                                  # 5. Start dev server
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
