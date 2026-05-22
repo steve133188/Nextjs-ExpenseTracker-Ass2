@@ -116,11 +116,9 @@ export default function UserDetailPage() {
                   ) : (
                     <div className="flex items-center gap-2 flex-1 justify-between">
                       <span className="text-sm font-medium">{target.username}</span>
-                      {!isSelf && (
-                        <Button size="icon" variant="ghost" className="size-7" onClick={startEditName}>
-                          <Pencil className="size-3.5" />
-                        </Button>
-                      )}
+                      <Button size="icon" variant="ghost" className="size-7" onClick={startEditName}>
+                        <Pencil className="size-3.5" />
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -138,23 +136,19 @@ export default function UserDetailPage() {
                 {/* Role */}
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground w-24 shrink-0">Role</span>
-                  {isSelf ? (
-                    <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
-                  ) : (
-                    <Select
-                      value={target.role}
-                      disabled={changeRole.isPending}
-                      onValueChange={(newRole) => setRoleConfirm({ id, username: target.username, newRole })}
-                    >
-                      <SelectTrigger className="h-7 w-24 text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="user">user</SelectItem>
-                        <SelectItem value="admin">admin</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <Select
+                    value={target.role}
+                    disabled={changeRole.isPending}
+                    onValueChange={(newRole) => setRoleConfirm({ id, username: target.username, newRole })}
+                  >
+                    <SelectTrigger className="h-7 w-24 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">user</SelectItem>
+                      <SelectItem value="admin">admin</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <Separator />
