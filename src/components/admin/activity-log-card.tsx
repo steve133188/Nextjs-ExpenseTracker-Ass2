@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { format } from "date-fns"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react"
 import { useAdminActivities } from "@/hooks/use-admin"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,18 @@ export function ActivityLogCard() {
   return (
     <Card>
       <CardHeader className="py-3 px-4">
-        <CardTitle className="text-base">Activity Log</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base">Activity Log</CardTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7"
+            disabled={activitiesQuery.isFetching}
+            onClick={() => activitiesQuery.refetch()}
+          >
+            <RefreshCw className={`size-3.5 ${activitiesQuery.isFetching ? "animate-spin" : ""}`} />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="pt-0 px-0">
         <Table>
