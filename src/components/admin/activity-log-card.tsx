@@ -95,8 +95,8 @@ export function ActivityLogCard() {
                     <TableCell className="text-sm text-muted-foreground">
                       {activity.detail || null}
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground pr-4">
-                      {format(new Date(activity.createdAt), "dd MMM HH:mm")}
+                    <TableCell className="text-xs text-muted-foreground pr-4 whitespace-nowrap">
+                      {format(new Date(activity.createdAt), "dd MMM yyyy HH:mm")}
                     </TableCell>
                   </TableRow>
                 ))
