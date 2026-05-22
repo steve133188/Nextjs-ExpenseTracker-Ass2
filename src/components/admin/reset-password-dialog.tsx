@@ -38,8 +38,9 @@ export function ResetPasswordDialog({ userId, username }: { userId: string; user
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-7 w-7" aria-label={`Reset password for ${username}`}>
+        <Button variant="outline" size="sm">
           <KeyRound className="size-3.5" />
+          Reset Password
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
