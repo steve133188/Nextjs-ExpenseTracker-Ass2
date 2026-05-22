@@ -9,7 +9,6 @@ import {
   useAdminUser, useChangeRole, useAdminChangeUsername,
   useDeleteUser, useResetUserPassword,
 } from "@/hooks/use-admin"
-import { RoleConfirmDialog } from "@/components/admin/role-confirm-dialog"
 import { ResetPasswordDialog } from "@/components/admin/reset-password-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -30,15 +29,15 @@ export default function UserDetailPage() {
   const router = useRouter()
   const { user: currentUser } = useAuth()
 
-  const userQuery       = useAdminUser(id)
-  const changeRole      = useChangeRole()
-  const changeUsername  = useAdminChangeUsername()
-  const deleteUser      = useDeleteUser()
-  const resetPassword   = useResetUserPassword()
+  const userQuery      = useAdminUser(id)
+  const changeRole     = useChangeRole()
+  const changeUsername = useAdminChangeUsername()
+  const deleteUser     = useDeleteUser()
 
   const [editingName, setEditingName] = useState(false)
   const [nameInput,   setNameInput]   = useState("")
-  const [roleConfirm, setRoleConfirm] = useState<{ id: string; username: string; newRole: string } | null>(null)
+  const [editingRole, setEditingRole] = useState(false)
+  const [roleInput,   setRoleInput]   = useState("")
   const [deleteOpen,  setDeleteOpen]  = useState(false)
 
   const target = userQuery.data
@@ -58,6 +57,23 @@ export default function UserDetailPage() {
     if (!nameInput.trim() || nameInput === target?.username) { cancelEditName(); return }
     changeUsername.mutate({ id, username: nameInput.trim() }, {
       onSuccess: () => setEditingName(false),
+    })
+  }
+
+  function startEditRole() {
+    setRoleInput(target?.role ?? "user")
+    setEditingRole(true)
+  }
+
+  function cancelEditRole() {
+    setEditingRole(false)
+    setRoleInput("")
+  }
+
+  function saveRole() {
+    if (!roleInput || roleInput === target?.role) { cancelEditRole(); return }
+    changeRole.mutate({ id, role: roleInput }, {
+      onSuccess: () => setEditingRole(false),
     })
   }
 
@@ -93,7 +109,7 @@ export default function UserDetailPage() {
               <p className="text-sm text-muted-foreground">Failed to load user.</p>
             ) : target ? (
               <>
-                {/* Username */}
+                {/* Username — inline edit */}
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-muted-foreground w-24 shrink-0">Username</span>
                   {editingName ? (
@@ -133,25 +149,38 @@ export default function UserDetailPage() {
 
                 <Separator />
 
-                {/* Role */}
-                <div className="flex items-center gap-3">
+                {/* Role — inline edit, blocked for self */}
+                <div className="flex items-center justify-between gap-3">
                   <span className="text-sm text-muted-foreground w-24 shrink-0">Role</span>
                   {isSelf ? (
-                    <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
+                    <div className="flex-1">
+                      <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
+                    </div>
+                  ) : editingRole ? (
+                    <div className="flex items-center gap-2 flex-1">
+                      <Select value={roleInput} onValueChange={setRoleInput} disabled={changeRole.isPending}>
+                        <SelectTrigger className="h-8 text-sm flex-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="user">user</SelectItem>
+                          <SelectItem value="admin">admin</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button size="icon" className="size-8 shrink-0" onClick={saveRole} disabled={changeRole.isPending}>
+                        <Check className="size-3.5" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="size-8 shrink-0" onClick={cancelEditRole}>
+                        <X className="size-3.5" />
+                      </Button>
+                    </div>
                   ) : (
-                    <Select
-                      value={target.role}
-                      disabled={changeRole.isPending}
-                      onValueChange={(newRole) => setRoleConfirm({ id, username: target.username, newRole })}
-                    >
-                      <SelectTrigger className="h-7 w-24 text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="user">user</SelectItem>
-                        <SelectItem value="admin">admin</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="flex items-center gap-2 flex-1 justify-between">
+                      <Badge variant={target.role === "admin" ? "default" : "secondary"}>{target.role}</Badge>
+                      <Button size="icon" variant="ghost" className="size-7" onClick={startEditRole}>
+                        <Pencil className="size-3.5" />
+                      </Button>
+                    </div>
                   )}
                 </div>
 
@@ -186,12 +215,6 @@ export default function UserDetailPage() {
           </Card>
         )}
       </div>
-
-      <RoleConfirmDialog
-        target={roleConfirm}
-        onConfirm={(uid, role) => { changeRole.mutate({ id: uid, role }); setRoleConfirm(null) }}
-        onCancel={() => setRoleConfirm(null)}
-      />
 
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>

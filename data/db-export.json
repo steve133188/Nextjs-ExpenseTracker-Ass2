@@ -1,32 +1,25 @@
 {
-  "exportedAt": "2026-05-11T05:40:54.568Z",
+  "exportedAt": "2026-05-22T01:33:42.020Z",
   "users": [
     {
-      "id": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
+      "id": "a9e16f78-bade-4dbe-860f-ae347b7e7f2c",
       "username": "root",
       "email": "root@test.com",
       "role": "admin",
-      "createdAt": 1767243973016
+      "createdAt": 1768181609875
     },
     {
-      "id": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "username": "demo1",
       "email": "demo1@test.com",
       "role": "user",
-      "createdAt": 1768107973016
-    },
-    {
-      "id": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "username": "demo2",
-      "email": "demo2@test.com",
-      "role": "user",
-      "createdAt": 1778476071076
+      "createdAt": 1769045609875
     }
   ],
   "expenses": [
     {
-      "id": "05b8ffb8-72af-47d3-8687-ad0c546b195a",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "f3514b12-78c9-4e4a-b9dc-9e6157d39bf6",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Rent",
       "amount": 1800,
       "category": "Housing",
@@ -35,29 +28,29 @@
       "createdAt": 1772316000000
     },
     {
-      "id": "d6f4a0db-b579-46d6-83f2-aec47c6599ed",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "ebded378-0047-45d5-9a10-dc97d64f44c7",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Groceries",
       "amount": 88.9,
       "category": "Food & Dining",
       "date": "2026-03-03",
-      "description": "Woolworths",
+      "description": "Weekly grocery run",
       "createdAt": 1772488860000
     },
     {
-      "id": "9267b933-0f27-4870-91e9-3a41e631697f",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Opal card top-up",
+      "id": "d0b1d954-5ced-4fb7-8855-c0014dc6634a",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Bus pass",
       "amount": 50,
       "category": "Transportation",
       "date": "2026-03-05",
-      "description": "",
+      "description": "Monthly top-up",
       "createdAt": 1772661720000
     },
     {
-      "id": "b70f510c-4cf3-41e0-a37d-6abcafcbeacb",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Gym",
+      "id": "f602fca1-52a0-4981-8d51-e96c5c957115",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Gym membership",
       "amount": 59.9,
       "category": "Health & Medical",
       "date": "2026-03-07",
@@ -65,19 +58,19 @@
       "createdAt": 1772834580000
     },
     {
-      "id": "353b2d62-90dd-45bd-b9f8-3d21298755c0",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Flights to Melbourne",
+      "id": "8665af08-e38e-449b-be1d-3c84f5c6ecd8",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Return flights",
       "amount": 218,
       "category": "Travel",
       "date": "2026-03-08",
-      "description": "Jetstar return",
+      "description": "Weekend trip",
       "createdAt": 1772921040000
     },
     {
-      "id": "08e48e61-fe11-4291-8c4b-549c5f7ace8a",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Airbnb Melbourne",
+      "id": "31964e68-d5a1-4366-a51c-397bcc3197a9",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Hotel stay",
       "amount": 312,
       "category": "Travel",
       "date": "2026-03-09",
@@ -85,18 +78,18 @@
       "createdAt": 1773007500000
     },
     {
-      "id": "7387342b-b2a3-4de0-aeac-4168a378af3d",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Lunch x5",
+      "id": "4a9f2f4b-0ca0-4929-a9de-d6df7ae4d1e9",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Lunch",
       "amount": 67.5,
       "category": "Food & Dining",
       "date": "2026-03-12",
-      "description": "Office week",
+      "description": "Office lunches",
       "createdAt": 1773266760000
     },
     {
-      "id": "c6d038c8-57a3-4180-b129-8ce6998f38f3",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "e92bf6f2-f77f-401e-8d92-53fa3c910b58",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Petrol",
       "amount": 78.2,
       "category": "Transportation",
@@ -105,19 +98,19 @@
       "createdAt": 1773526020000
     },
     {
-      "id": "e4dfdf92-cee9-4ec9-81fa-73c37040e61d",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Spotify + Netflix",
+      "id": "4f12f1ca-b4cc-4dc7-9542-a71bead66dd1",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Streaming services",
       "amount": 32.98,
       "category": "Entertainment",
       "date": "2026-03-17",
-      "description": "",
+      "description": "Spotify + Netflix",
       "createdAt": 1773698880000
     },
     {
-      "id": "63a35cad-c65d-4289-b31d-84c195676828",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Nike Pegasus 41",
+      "id": "42bc765d-aa0a-414a-b81b-ffbfd73ce1c8",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Running shoes",
       "amount": 219.99,
       "category": "Shopping",
       "date": "2026-03-22",
@@ -125,8 +118,8 @@
       "createdAt": 1774130940000
     },
     {
-      "id": "b994593b-757a-4120-8072-9d6254c52122",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "e96ebb61-9dea-4592-8781-0e13b0c11275",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Rent",
       "amount": 1800,
       "category": "Housing",
@@ -135,39 +128,39 @@
       "createdAt": 1774995000000
     },
     {
-      "id": "7b9dc02f-bdd2-41a1-aa31-df4ef6a6948e",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "c0059909-e69b-416f-9642-227ceaaa5b9b",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Groceries",
       "amount": 82.4,
       "category": "Food & Dining",
       "date": "2026-04-03",
-      "description": "Coles",
+      "description": "Weekly grocery run",
       "createdAt": 1775167860000
     },
     {
-      "id": "679bfbf5-673b-4db3-9155-c718f732d01f",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Opal card top-up",
+      "id": "43c59e7e-14c8-4d11-8a78-f0b0d6200b9e",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Bus pass",
       "amount": 50,
       "category": "Transportation",
       "date": "2026-04-04",
-      "description": "",
+      "description": "Monthly top-up",
       "createdAt": 1775254320000
     },
     {
-      "id": "88a00c7b-1c9a-46b7-a1e1-19e134a6b13d",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Flat white x5",
+      "id": "19612992-d86c-454d-bd91-0e59fff3b59e",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Morning coffees",
       "amount": 27.5,
       "category": "Food & Dining",
       "date": "2026-04-07",
-      "description": "Morning coffees",
+      "description": "Coffee x5",
       "createdAt": 1775517180000
     },
     {
-      "id": "c4d995e6-6b90-4c0a-a888-17390a223f9c",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Gym",
+      "id": "f73ee3c5-7ecf-4776-b251-ff9f5d6fea8e",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Gym membership",
       "amount": 59.9,
       "category": "Health & Medical",
       "date": "2026-04-07",
@@ -175,58 +168,58 @@
       "createdAt": 1775517240000
     },
     {
-      "id": "c53f4694-7f8a-463a-9a0a-69d381425d0c",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Lunch x4",
+      "id": "e202700f-1880-40f2-a7a5-0c30e1f06b0e",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Lunch",
       "amount": 54,
       "category": "Food & Dining",
       "date": "2026-04-10",
-      "description": "",
+      "description": "Office lunches",
       "createdAt": 1775776500000
     },
     {
-      "id": "0844ed1b-1a3d-4e96-a7bf-7425fee59cb3",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Spotify + Netflix",
+      "id": "0e2daa4f-b574-4313-93e9-6ec4bf11e715",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Streaming services",
       "amount": 32.98,
       "category": "Entertainment",
       "date": "2026-04-17",
-      "description": "",
+      "description": "Spotify + Netflix",
       "createdAt": 1776381360000
     },
     {
-      "id": "1ced7782-03ab-41c2-9f93-e2e5747cc0c2",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Electricity",
+      "id": "1ea1bbda-1587-4bbf-9e32-01d23b34f71d",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Electricity bill",
       "amount": 74.2,
       "category": "Housing",
       "date": "2026-04-23",
-      "description": "Ausgrid Apr",
+      "description": "April utility bill",
       "createdAt": 1776899820000
     },
     {
-      "id": "3663a0cd-2c72-4353-9e19-4a8726463913",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Chemist Warehouse",
+      "id": "0697b1cd-21a4-41e5-b81a-c4bc1a90eac1",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Pharmacy",
       "amount": 38.6,
       "category": "Health & Medical",
       "date": "2026-04-25",
-      "description": "Vitamins + allergy tabs",
+      "description": "Vitamins and allergy medicine",
       "createdAt": 1777072680000
     },
     {
-      "id": "c4352203-56f7-4df6-b299-3561388a9bb9",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Blue Mountains trip",
+      "id": "11f59672-a13f-496e-9d94-b03e8cf178c2",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Day trip",
       "amount": 95,
       "category": "Travel",
       "date": "2026-04-27",
-      "description": "Petrol + parking",
+      "description": "Petrol and parking",
       "createdAt": 1777245540000
     },
     {
-      "id": "ae2cde40-d6ff-41e2-8754-19b410a557bd",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "62d80861-452a-4c86-a2e7-6db5203e6b3b",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Rent",
       "amount": 1800,
       "category": "Housing",
@@ -235,29 +228,29 @@
       "createdAt": 1777591200000
     },
     {
-      "id": "4928921d-e977-45a5-a72b-9d0873123528",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
+      "id": "1f93cb33-ed0f-45ae-b419-c94145cdecad",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
       "title": "Groceries",
       "amount": 91.15,
       "category": "Food & Dining",
       "date": "2026-05-03",
-      "description": "Woolworths",
+      "description": "Weekly grocery run",
       "createdAt": 1777764060000
     },
     {
-      "id": "89a0dee5-e1d5-4819-bb51-436dd5e65a82",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Opal card top-up",
+      "id": "4d8c2b40-7b63-4e8c-a32f-4a95e3250082",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Bus pass",
       "amount": 50,
       "category": "Transportation",
       "date": "2026-05-05",
-      "description": "",
+      "description": "Monthly top-up",
       "createdAt": 1777936920000
     },
     {
-      "id": "cb8678a4-54a0-4068-89c7-a5556b9eee6a",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Gym",
+      "id": "7ec48355-ec89-48aa-82b0-0ab6aea7f8eb",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Gym membership",
       "amount": 59.9,
       "category": "Health & Medical",
       "date": "2026-05-05",
@@ -265,29 +258,29 @@
       "createdAt": 1777936980000
     },
     {
-      "id": "608abcf1-4f68-4bf3-9140-d1357e49c112",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Café breakfast",
+      "id": "060437be-7e4c-4afb-a3af-2943a89e69ea",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Breakfast",
       "amount": 28.5,
       "category": "Food & Dining",
       "date": "2026-05-07",
-      "description": "Artificer Surry Hills",
+      "description": "Cafe breakfast",
       "createdAt": 1778109840000
     },
     {
-      "id": "03268fec-0e10-4160-870f-fa444a13533f",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Lunch x3",
+      "id": "6521b82a-d114-46c1-bfb1-43cb1f9a17a2",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Lunch",
       "amount": 42,
       "category": "Food & Dining",
       "date": "2026-05-08",
-      "description": "",
+      "description": "Office lunches",
       "createdAt": 1778196300000
     },
     {
-      "id": "9091a539-a6a0-4140-892e-2181a4eca739",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Keychron K2",
+      "id": "e2e613a3-fc11-4178-b827-5bf8e93c0572",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Mechanical keyboard",
       "amount": 139,
       "category": "Shopping",
       "date": "2026-05-09",
@@ -295,176 +288,25 @@
       "createdAt": 1778282760000
     },
     {
-      "id": "59c68ba0-ba9a-4bee-812c-9260bd902553",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Electricity",
+      "id": "d839aba4-0560-45f9-9aad-a5f03e15cf1a",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Electricity bill",
       "amount": 66.8,
       "category": "Housing",
       "date": "2026-05-10",
-      "description": "Ausgrid May",
+      "description": "May utility bill",
       "createdAt": 1778369220000
     },
     {
-      "id": "c4a76f0e-83b9-41de-8e5b-7ff9156a13e7",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "title": "Spotify + Netflix",
+      "id": "8fbff7f7-213d-4de7-a80d-a07eb175c3a2",
+      "userId": "7494adab-3e15-4209-8ad4-4fbd7af7bcde",
+      "title": "Streaming services",
       "amount": 32.98,
       "category": "Entertainment",
       "date": "2026-05-11",
-      "description": "",
+      "description": "Spotify + Netflix",
       "createdAt": 1778455680000
-    },
-    {
-      "id": "a84855cb-dcd0-470a-99b2-50d8596178c2",
-      "userId": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "title": "test11",
-      "amount": 50,
-      "category": "Other",
-      "date": "2026-05-11",
-      "description": "",
-      "createdAt": 1778476196147
     }
   ],
-  "activities": [
-    {
-      "id": "2dd9fc80-a040-45eb-9135-3118cc91e686",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "login",
-      "detail": "Signed in as demo1",
-      "createdAt": 1778475981815
-    },
-    {
-      "id": "92a5de74-17bb-4cfa-bfa2-37465b0006c4",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "login",
-      "detail": "Signed in as root",
-      "createdAt": 1778476035237
-    },
-    {
-      "id": "3a3344d4-8ce8-47f7-8e44-057fe193520c",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "create_user",
-      "detail": "Created account for demo2 (user)",
-      "createdAt": 1778476071077
-    },
-    {
-      "id": "b9f5431a-f800-4700-ad40-8e4833d0cf98",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "logout",
-      "detail": "demo1 signed out",
-      "createdAt": 1778476076427
-    },
-    {
-      "id": "f3b35319-715d-42ca-bfce-9c4aac0ed9b0",
-      "userId": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "action": "login",
-      "detail": "Signed in as demo2",
-      "createdAt": 1778476103463
-    },
-    {
-      "id": "abf4835a-3ca9-40ec-8511-0a57127f2a1e",
-      "userId": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "action": "create_expense",
-      "detail": "Added expense: test ($50.00)",
-      "createdAt": 1778476196149
-    },
-    {
-      "id": "671dace4-307e-407d-9dae-ec722abf92c0",
-      "userId": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "action": "update_expense",
-      "detail": "Updated expense: test11 ($50.00)",
-      "createdAt": 1778476622099
-    },
-    {
-      "id": "e54f5d52-0fc7-4b98-8fed-61de154491e4",
-      "userId": "2c77ef73-9511-4870-8cbb-31888a2665d9",
-      "action": "logout",
-      "detail": "demo2 signed out",
-      "createdAt": 1778476732839
-    },
-    {
-      "id": "4613370a-ed3f-493f-9003-b75cc9cd82f3",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "login",
-      "detail": "Signed in as demo1",
-      "createdAt": 1778476743189
-    },
-    {
-      "id": "7d75fb6b-bb9e-4039-87bf-846e9341f7c1",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "logout",
-      "detail": "demo1 signed out",
-      "createdAt": 1778477040737
-    },
-    {
-      "id": "698828f2-2f92-4fb7-8d60-25f8a450a8cb",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "login",
-      "detail": "Signed in as demo1",
-      "createdAt": 1778477053785
-    },
-    {
-      "id": "d7d4e471-9106-4be5-b8dc-ca1535313bde",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "change_password",
-      "detail": "root changed their password",
-      "createdAt": 1778477198386
-    },
-    {
-      "id": "da2339c2-c82c-4ff6-9f6b-cff1dcc64886",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "logout",
-      "detail": "root signed out",
-      "createdAt": 1778477201968
-    },
-    {
-      "id": "77f70b90-4c7a-4d6c-943a-364caece0580",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "login",
-      "detail": "Signed in as root",
-      "createdAt": 1778477216647
-    },
-    {
-      "id": "dbba24d3-e014-41b9-9349-dd89a03db9b9",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "logout",
-      "detail": "demo1 signed out",
-      "createdAt": 1778477249608
-    },
-    {
-      "id": "caf3c8a1-7a15-4bbe-96fe-17f90ba578f9",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "login",
-      "detail": "Signed in as demo1",
-      "createdAt": 1778477259214
-    },
-    {
-      "id": "6b811cb9-356b-4cb5-a86c-641300e6b6f0",
-      "userId": "fe0ec1aa-f4b7-4fdc-b614-06c7684f56e6",
-      "action": "reset_password",
-      "detail": "Admin reset password for demo1",
-      "createdAt": 1778477270082
-    },
-    {
-      "id": "4039c15f-ddc7-47ef-977e-2106e32de3fa",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "logout",
-      "detail": "demo1 signed out",
-      "createdAt": 1778477274348
-    },
-    {
-      "id": "6effed3d-1707-40f8-a1e3-f7926b63fe72",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "login",
-      "detail": "Signed in as demo1",
-      "createdAt": 1778477300413
-    },
-    {
-      "id": "ff055635-4b63-430e-861c-60f05f13a5c5",
-      "userId": "ef962fdf-f2ff-4493-bcac-bd9ab1ba9749",
-      "action": "change_password",
-      "detail": "demo1 changed their password",
-      "createdAt": 1778477310679
-    }
-  ]
+  "activities": []
 }
